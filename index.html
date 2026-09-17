@@ -1,0 +1,3797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operational Setup | Harar City Digital Visibility Initiative</title>
+<meta name="description" content="People, tools, equipment, systems and workflow required to implement the Harar City Digital Visibility Initiative in the field.">
+<meta name="theme-color" content="#0b5563">
+<meta name="color-scheme" content="light">
+
+<!--
+  ============================================================================
+  HARAR CITY DIGITAL VISIBILITY INITIATIVE — OPERATIONAL SETUP
+  ============================================================================
+  This page is a modular extension of the main initiative website.
+
+  INTEGRATION NOTES
+  -----------------
+  1. Place this file in the repository root, next to index.html:
+         /operational-setup.html
+  2. Add a navigation item to the existing site:
+         <a href="operational-setup.html">Operational Setup</a>
+  3. All styles are scoped with an "op-" class prefix and "hcd-" custom
+     properties, so they will not collide with the existing global CSS.
+     If the existing site already defines a palette, edit ONLY the
+     :root block below — every colour on this page derives from it.
+  4. No external dependencies. No backend. No database.
+     Works offline and when opened directly as a local file.
+  ============================================================================
+-->
+
+<style>
+/* ==========================================================================
+   1. DESIGN TOKENS
+   Edit this block to match the existing initiative website exactly.
+   ========================================================================== */
+:root{
+  --hcd-primary:      #0b5563;
+  --hcd-primary-dark: #073b45;
+  --hcd-primary-soft: #e7f0f1;
+  --hcd-accent:       #b8791f;
+  --hcd-accent-soft:  #fbf2e2;
+  --hcd-ink:          #14201f;
+  --hcd-ink-soft:     #3f4d4b;
+  --hcd-muted:        #6c7876;
+  --hcd-bg:           #f7f5f1;
+  --hcd-surface:      #ffffff;
+  --hcd-line:         #e3dfd7;
+  --hcd-line-strong:  #cfc9be;
+  --hcd-ok:           #2f6b4f;
+  --hcd-warn:         #9a5b12;
+
+  --hcd-radius:  14px;
+  --hcd-radius-s: 9px;
+  --hcd-shadow:  0 1px 2px rgba(16,32,31,.05), 0 8px 24px rgba(16,32,31,.06);
+  --hcd-shadow-s:0 1px 2px rgba(16,32,31,.06);
+  --hcd-maxw:    1140px;
+  --hcd-header-h: 64px;
+  --hcd-nav-h:    54px;
+
+  --hcd-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+              "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --hcd-serif: Georgia, "Times New Roman", "Noto Serif", serif;
+  --hcd-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* ==========================================================================
+   2. BASE
+   ========================================================================== */
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top: calc(var(--hcd-header-h) + var(--hcd-nav-h) + 18px);
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  margin:0;
+  font-family:var(--hcd-sans);
+  font-size:16px;
+  line-height:1.65;
+  color:var(--hcd-ink);
+  background:var(--hcd-bg);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+img{ max-width:100%; height:auto; display:block; }
+a{ color:var(--hcd-primary); }
+a:hover{ color:var(--hcd-primary-dark); }
+
+h1,h2,h3,h4{ line-height:1.22; margin:0; font-weight:700; letter-spacing:-.01em; }
+p{ margin:0 0 1em; }
+p:last-child{ margin-bottom:0; }
+ul,ol{ margin:0 0 1em; padding-left:1.15em; }
+li{ margin-bottom:.35em; }
+li:last-child{ margin-bottom:0; }
+
+:focus-visible{
+  outline:3px solid var(--hcd-accent);
+  outline-offset:2px;
+  border-radius:4px;
+}
+
+.op-skip{
+  position:absolute; left:-9999px; top:0; z-index:200;
+  background:var(--hcd-primary); color:#fff;
+  padding:12px 18px; border-radius:0 0 var(--hcd-radius-s) 0;
+  font-weight:600; text-decoration:none;
+}
+.op-skip:focus{ left:0; color:#fff; }
+
+.op-vh{
+  position:absolute!important; width:1px; height:1px;
+  padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+.op-container{
+  width:100%;
+  max-width:var(--hcd-maxw);
+  margin:0 auto;
+  padding:0 20px;
+}
+
+/* ==========================================================================
+   3. HEADER + NAVIGATION
+   ========================================================================== */
+.op-header{
+  position:sticky; top:0; z-index:60;
+  height:var(--hcd-header-h);
+  background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(150%) blur(10px);
+  -webkit-backdrop-filter:saturate(150%) blur(10px);
+  border-bottom:1px solid var(--hcd-line);
+}
+.op-header__inner{
+  height:100%;
+  max-width:var(--hcd-maxw);
+  margin:0 auto;
+  padding:0 20px;
+  display:flex; align-items:center; gap:16px;
+}
+.op-brand{
+  display:flex; align-items:center; gap:11px;
+  text-decoration:none; color:var(--hcd-ink);
+  font-weight:700; font-size:.95rem; line-height:1.15;
+  min-width:0;
+}
+.op-brand__mark{
+  flex:none;
+  width:34px; height:34px; border-radius:9px;
+  background:var(--hcd-primary); color:#fff;
+  display:grid; place-items:center;
+  font-family:var(--hcd-serif); font-size:.82rem; font-weight:700; letter-spacing:.02em;
+}
+.op-brand__text{ display:flex; flex-direction:column; min-width:0; }
+.op-brand__text small{
+  font-weight:500; color:var(--hcd-muted);
+  font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;
+}
+.op-brand__text span{
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.op-nav{ margin-left:auto; display:flex; align-items:center; gap:4px; }
+.op-nav__link{
+  display:inline-block;
+  padding:8px 13px; border-radius:8px;
+  font-size:.875rem; font-weight:600; text-decoration:none;
+  color:var(--hcd-ink-soft);
+  transition:background .16s ease, color .16s ease;
+}
+.op-nav__link:hover{ background:var(--hcd-primary-soft); color:var(--hcd-primary-dark); }
+.op-nav__link[aria-current="page"]{ background:var(--hcd-primary); color:#fff; }
+
+.op-header__actions{ display:flex; align-items:center; gap:8px; margin-left:8px; }
+
+.op-iconbtn{
+  appearance:none; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  height:38px; padding:0 12px;
+  border:1px solid var(--hcd-line-strong);
+  background:var(--hcd-surface); color:var(--hcd-ink-soft);
+  border-radius:9px; font:inherit; font-size:.82rem; font-weight:600;
+  transition:background .16s ease, border-color .16s ease, color .16s ease;
+}
+.op-iconbtn:hover{ background:var(--hcd-primary-soft); border-color:var(--hcd-primary); color:var(--hcd-primary-dark); }
+.op-iconbtn svg{ width:16px; height:16px; flex:none; }
+
+.op-burger{ display:none; }
+.op-burger__bars{
+  display:block; position:relative; width:18px; height:2px;
+  background:currentColor; border-radius:2px;
+}
+.op-burger__bars::before,
+.op-burger__bars::after{
+  content:""; position:absolute; left:0; width:18px; height:2px;
+  background:currentColor; border-radius:2px; transition:transform .2s ease;
+}
+.op-burger__bars::before{ top:-6px; }
+.op-burger__bars::after{ top:6px; }
+.op-burger[aria-expanded="true"] .op-burger__bars{ background:transparent; }
+.op-burger[aria-expanded="true"] .op-burger__bars::before{ top:0; transform:rotate(45deg); }
+.op-burger[aria-expanded="true"] .op-burger__bars::after{ top:0; transform:rotate(-45deg); }
+
+@media (max-width: 860px){
+  .op-burger{ display:inline-flex; }
+  .op-nav{
+    position:absolute; top:var(--hcd-header-h); left:0; right:0;
+    flex-direction:column; align-items:stretch; gap:2px;
+    background:var(--hcd-surface);
+    border-bottom:1px solid var(--hcd-line);
+    padding:10px 16px 16px;
+    box-shadow:var(--hcd-shadow);
+    display:none;
+  }
+  .op-nav[data-open="true"]{ display:flex; }
+  .op-nav__link{ padding:12px 14px; font-size:.95rem; }
+  .op-header__actions .op-label{ display:none; }
+}
+
+/* ---- Section (page) navigation ---------------------------------------- */
+.op-sectionnav{
+  position:sticky; top:var(--hcd-header-h); z-index:55;
+  background:var(--hcd-surface);
+  border-bottom:1px solid var(--hcd-line);
+  height:var(--hcd-nav-h);
+}
+.op-sectionnav__inner{
+  height:100%;
+  max-width:var(--hcd-maxw);
+  margin:0 auto;
+  padding:0 20px;
+  display:flex; align-items:center; gap:12px;
+}
+.op-chips{
+  flex:1 1 auto; min-width:0;
+  display:flex; align-items:center; gap:7px;
+  overflow-x:auto; overflow-y:hidden;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  padding:6px 0;
+}
+.op-chips::-webkit-scrollbar{ display:none; }
+
+.op-chip{
+  flex:none;
+  display:inline-block;
+  padding:6px 12px;
+  border:1px solid var(--hcd-line-strong);
+  border-radius:999px;
+  background:var(--hcd-surface);
+  color:var(--hcd-ink-soft);
+  font-size:.78rem; font-weight:600; white-space:nowrap;
+  text-decoration:none;
+  transition:background .16s ease, color .16s ease, border-color .16s ease;
+}
+.op-chip:hover{ background:var(--hcd-primary-soft); border-color:var(--hcd-primary); color:var(--hcd-primary-dark); }
+.op-chip.is-active{ background:var(--hcd-primary); border-color:var(--hcd-primary); color:#fff; }
+
+.op-toggleall{
+  flex:none;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 12px; border-radius:999px;
+  border:1px solid var(--hcd-line-strong);
+  background:var(--hcd-surface); color:var(--hcd-ink-soft);
+  font:inherit; font-size:.78rem; font-weight:600; cursor:pointer;
+  transition:background .16s ease, border-color .16s ease;
+}
+.op-toggleall:hover{ background:var(--hcd-accent-soft); border-color:var(--hcd-accent); color:var(--hcd-warn); }
+@media (max-width: 560px){
+  .op-toggleall span{ display:none; }
+}
+
+/* ==========================================================================
+   4. HERO
+   ========================================================================== */
+.op-hero{
+  background:
+    radial-gradient(900px 380px at 88% -12%, rgba(184,121,31,.16), transparent 62%),
+    linear-gradient(180deg, #0b5563 0%, #073b45 100%);
+  color:#fff;
+  padding:64px 0 58px;
+  position:relative;
+  overflow:hidden;
+}
+.op-hero::after{
+  content:"";
+  position:absolute; inset:auto 0 0 0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+}
+.op-hero__eyebrow{
+  display:inline-block;
+  font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:#f0d9ac;
+  border:1px solid rgba(240,217,172,.4);
+  border-radius:999px;
+  padding:6px 14px;
+  margin:0 0 20px;
+}
+.op-hero h1{
+  font-family:var(--hcd-serif);
+  font-size:clamp(2rem, 5.4vw, 3.1rem);
+  letter-spacing:-.015em;
+  margin:0 0 12px;
+}
+.op-hero__sub{
+  font-size:clamp(.95rem, 2.2vw, 1.12rem);
+  font-weight:600;
+  letter-spacing:.06em;
+  color:#bfe0e4;
+  margin:0 0 20px;
+}
+.op-hero__desc{
+  max-width:62ch;
+  font-size:1.03rem;
+  color:rgba(255,255,255,.9);
+  margin:0 0 30px;
+}
+.op-hero__meta{
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.op-pill{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:7px 14px; border-radius:999px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:.78rem; font-weight:600;
+  color:rgba(255,255,255,.94);
+}
+.op-pill--warn{
+  background:rgba(184,121,31,.22);
+  border-color:rgba(240,217,172,.4);
+  color:#f4dfb6;
+}
+
+/* ==========================================================================
+   5. SECTIONS
+   ========================================================================== */
+.op-section{
+  padding:60px 0;
+  border-bottom:1px solid var(--hcd-line);
+  scroll-margin-top: calc(var(--hcd-header-h) + var(--hcd-nav-h) + 12px);
+}
+.op-section:last-of-type{ border-bottom:0; }
+.op-section:nth-of-type(even){ background:var(--hcd-surface); }
+
+.op-eyebrow{
+  font-size:.72rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--hcd-accent);
+  margin:0 0 10px;
+}
+.op-h2{
+  font-family:var(--hcd-serif);
+  font-size:clamp(1.5rem, 3.4vw, 2.05rem);
+  color:var(--hcd-ink);
+  margin:0 0 12px;
+}
+.op-lead{
+  max-width:72ch;
+  color:var(--hcd-ink-soft);
+  font-size:1.02rem;
+  margin:0 0 26px;
+}
+.op-h3{
+  font-size:1.06rem;
+  margin:0 0 10px;
+  color:var(--hcd-ink);
+}
+.op-h4{
+  font-size:.92rem;
+  margin:0 0 8px;
+  color:var(--hcd-ink);
+}
+
+.op-note{
+  display:flex; gap:12px;
+  padding:14px 16px;
+  border-radius:var(--hcd-radius-s);
+  background:var(--hcd-accent-soft);
+  border:1px solid #ecd9b6;
+  border-left:4px solid var(--hcd-accent);
+  color:#5c4211;
+  font-size:.9rem;
+  margin:22px 0 0;
+}
+.op-note strong{ color:#4a350c; }
+.op-note--info{
+  background:var(--hcd-primary-soft);
+  border-color:#cfe2e4;
+  border-left-color:var(--hcd-primary);
+  color:#0d4750;
+}
+.op-note--info strong{ color:#08353c; }
+.op-note__icon{ flex:none; font-weight:700; }
+
+.op-grid{ display:grid; gap:18px; }
+.op-grid--2{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+.op-grid--3{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+.op-grid--4{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+@media (max-width: 1000px){
+  .op-grid--4{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 820px){
+  .op-grid--3{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 640px){
+  .op-grid--2,
+  .op-grid--3,
+  .op-grid--4{ grid-template-columns:1fr; }
+}
+
+/* ---- Cards ------------------------------------------------------------- */
+.op-card{
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  padding:20px;
+  box-shadow:var(--hcd-shadow-s);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.op-section:nth-of-type(even) .op-card{ background:var(--hcd-bg); }
+.op-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--hcd-shadow);
+  border-color:var(--hcd-line-strong);
+}
+.op-card__top{
+  display:flex; align-items:flex-start; gap:12px;
+  margin-bottom:12px;
+}
+.op-card__num{
+  flex:none;
+  width:34px; height:34px; border-radius:9px;
+  display:grid; place-items:center;
+  background:var(--hcd-primary-soft);
+  color:var(--hcd-primary-dark);
+  font-size:.8rem; font-weight:700;
+  font-variant-numeric:tabular-nums;
+}
+.op-card h3{ font-size:1rem; margin:0; }
+.op-card__role{
+  font-size:.76rem; font-weight:600; color:var(--hcd-muted);
+  text-transform:uppercase; letter-spacing:.06em;
+  margin:4px 0 0;
+}
+.op-card p{ font-size:.9rem; color:var(--hcd-ink-soft); }
+.op-card ul{ font-size:.88rem; color:var(--hcd-ink-soft); }
+.op-card__meta{
+  margin-top:14px; padding-top:12px;
+  border-top:1px dashed var(--hcd-line-strong);
+  font-size:.78rem; color:var(--hcd-muted);
+}
+.op-card__meta b{ color:var(--hcd-ink-soft); font-weight:600; }
+
+/* ---- Operating model flow --------------------------------------------- */
+.op-flow{ list-style:none; margin:0; padding:0; position:relative; }
+.op-flow::before{
+  content:"";
+  position:absolute; left:19px; top:14px; bottom:14px;
+  width:2px; background:linear-gradient(180deg,var(--hcd-primary),var(--hcd-accent));
+  opacity:.35;
+}
+.op-flow__node{
+  position:relative;
+  display:flex; gap:18px;
+  padding:0 0 16px;
+  margin:0;
+}
+.op-flow__node:last-child{ padding-bottom:0; }
+.op-flow__marker{
+  flex:none;
+  width:40px; height:40px; border-radius:11px;
+  background:var(--hcd-surface);
+  border:2px solid var(--hcd-primary);
+  color:var(--hcd-primary-dark);
+  display:grid; place-items:center;
+  font-size:.78rem; font-weight:700;
+  font-variant-numeric:tabular-nums;
+  z-index:1;
+}
+.op-flow__body{
+  flex:1 1 auto;
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius-s);
+  padding:14px 18px;
+  box-shadow:var(--hcd-shadow-s);
+}
+.op-section:nth-of-type(even) .op-flow__body{ background:var(--hcd-bg); }
+.op-section:nth-of-type(even) .op-flow__marker{ background:var(--hcd-bg); }
+.op-flow__body h3{ font-size:.98rem; margin:0 0 4px; }
+.op-flow__body p{ font-size:.87rem; color:var(--hcd-ink-soft); margin:0; }
+.op-flow__tag{
+  display:inline-block;
+  font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--hcd-accent);
+  margin-bottom:5px;
+}
+
+/* ---- Tables ------------------------------------------------------------ */
+.op-tablewrap{
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  background:var(--hcd-surface);
+  overflow:hidden;
+}
+.op-tablewrap--scroll{ overflow-x:auto; }
+.op-tablewrap--scroll:focus-visible{ outline:3px solid var(--hcd-accent); outline-offset:2px; }
+
+.op-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.87rem;
+  min-width:680px;
+}
+.op-table caption{
+  text-align:left;
+  padding:14px 18px 10px;
+  font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--hcd-muted);
+}
+.op-table th,
+.op-table td{
+  padding:11px 16px;
+  text-align:left;
+  vertical-align:top;
+  border-bottom:1px solid var(--hcd-line);
+}
+.op-table thead th{
+  background:var(--hcd-primary-soft);
+  color:var(--hcd-primary-dark);
+  font-size:.75rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  position:sticky; top:0; z-index:2;
+}
+.op-table tbody tr:last-child td{ border-bottom:0; }
+.op-table tbody tr:hover td{ background:rgba(11,85,99,.035); }
+.op-table td:first-child{ font-weight:600; color:var(--hcd-ink); }
+
+.op-tag{
+  display:inline-block;
+  padding:3px 9px; border-radius:999px;
+  font-size:.7rem; font-weight:700; letter-spacing:.04em;
+  white-space:nowrap;
+}
+.op-tag--essential{ background:#e6f0ea; color:var(--hcd-ok); }
+.op-tag--recommended{ background:var(--hcd-primary-soft); color:var(--hcd-primary-dark); }
+.op-tag--optional{ background:#efeeea; color:var(--hcd-muted); }
+.op-tag--rec{ background:#e6f0ea; color:var(--hcd-ok); }
+.op-tag--alt{ background:#efeeea; color:var(--hcd-ink-soft); }
+
+.op-qty{
+  display:inline-block;
+  font-family:var(--hcd-mono);
+  font-size:.8rem;
+  background:var(--hcd-bg);
+  border:1px dashed var(--hcd-line-strong);
+  border-radius:6px;
+  padding:2px 8px;
+  color:var(--hcd-ink-soft);
+}
+
+/* ---- Filter bar -------------------------------------------------------- */
+.op-filterbar{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  margin:0 0 18px;
+}
+.op-filterbar__search{
+  flex:1 1 240px; min-width:200px;
+  position:relative;
+}
+.op-filterbar__search input{
+  width:100%;
+  padding:10px 14px 10px 38px;
+  border:1px solid var(--hcd-line-strong);
+  border-radius:9px;
+  background:var(--hcd-surface);
+  font:inherit; font-size:.88rem;
+  color:var(--hcd-ink);
+}
+.op-filterbar__search input::placeholder{ color:#9aa3a1; }
+.op-filterbar__search svg{
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:15px; height:15px; color:var(--hcd-muted); pointer-events:none;
+}
+.op-filters{ display:flex; flex-wrap:wrap; gap:7px; }
+.op-filter{
+  appearance:none; cursor:pointer;
+  padding:7px 13px; border-radius:999px;
+  border:1px solid var(--hcd-line-strong);
+  background:var(--hcd-surface); color:var(--hcd-ink-soft);
+  font:inherit; font-size:.78rem; font-weight:600;
+  transition:background .16s ease, color .16s ease, border-color .16s ease;
+}
+.op-filter:hover{ border-color:var(--hcd-primary); color:var(--hcd-primary-dark); }
+.op-filter[aria-pressed="true"]{
+  background:var(--hcd-primary); border-color:var(--hcd-primary); color:#fff;
+}
+.op-resultcount{
+  font-size:.78rem; color:var(--hcd-muted);
+  margin:0 0 12px;
+}
+.op-empty{
+  padding:28px 18px; text-align:center;
+  color:var(--hcd-muted); font-size:.9rem;
+  border:1px dashed var(--hcd-line-strong);
+  border-radius:var(--hcd-radius-s);
+  background:var(--hcd-surface);
+}
+
+/* ---- Details / disclosure ---------------------------------------------- */
+.op-details{
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  margin-bottom:10px;
+  overflow:hidden;
+  box-shadow:var(--hcd-shadow-s);
+}
+.op-section:nth-of-type(even) .op-details{ background:var(--hcd-bg); }
+.op-details > summary{
+  cursor:pointer;
+  list-style:none;
+  padding:16px 20px;
+  display:flex; align-items:center; gap:14px;
+  font-weight:700; font-size:.95rem;
+  transition:background .16s ease;
+}
+.op-details > summary::-webkit-details-marker{ display:none; }
+.op-details > summary:hover{ background:rgba(11,85,99,.05); }
+.op-details > summary::after{
+  content:"";
+  flex:none; margin-left:auto;
+  width:9px; height:9px;
+  border-right:2px solid var(--hcd-muted);
+  border-bottom:2px solid var(--hcd-muted);
+  transform:rotate(45deg);
+  transition:transform .2s ease;
+}
+.op-details[open] > summary::after{ transform:rotate(-135deg); }
+.op-details__step{
+  flex:none;
+  width:30px; height:30px; border-radius:8px;
+  background:var(--hcd-primary); color:#fff;
+  display:grid; place-items:center;
+  font-size:.74rem; font-weight:700;
+  font-variant-numeric:tabular-nums;
+}
+.op-details__body{
+  padding:2px 20px 20px;
+  border-top:1px solid var(--hcd-line);
+}
+.op-details__grid{
+  display:grid; gap:14px;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  margin-top:16px;
+}
+@media (max-width: 700px){
+  .op-details__grid{ grid-template-columns:1fr; }
+}
+.op-details__cell h4{
+  font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--hcd-accent);
+  margin:0 0 5px;
+}
+.op-details__cell p,
+.op-details__cell ul{ font-size:.87rem; color:var(--hcd-ink-soft); margin:0; }
+
+/* ---- Onboarding chain --------------------------------------------------- */
+.op-chain{
+  display:flex; flex-wrap:wrap; gap:8px;
+  list-style:none; padding:0; margin:0 0 24px;
+}
+.op-chain li{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 14px; border-radius:999px;
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line-strong);
+  font-size:.74rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--hcd-primary-dark);
+  margin:0;
+}
+.op-chain li::after{ content:"→"; color:var(--hcd-accent); font-weight:700; }
+.op-chain li:last-child::after{ content:""; }
+
+/* ---- Scorecard ---------------------------------------------------------- */
+.op-scale-legend{
+  display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px;
+}
+.op-scale-legend span{
+  font-size:.74rem; font-weight:700;
+  padding:4px 11px; border-radius:999px;
+  background:var(--hcd-primary-soft); color:var(--hcd-primary-dark);
+}
+.op-scorecard{ display:grid; gap:12px; }
+.op-score-row{
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  background:var(--hcd-surface);
+  padding:16px 18px;
+  margin:0;
+}
+.op-section:nth-of-type(even) .op-score-row{ background:var(--hcd-bg); }
+.op-score-row legend{
+  font-weight:700; font-size:.94rem; padding:0;
+}
+.op-score-row__desc{
+  font-size:.84rem; color:var(--hcd-muted);
+  margin:4px 0 12px;
+}
+.op-scale{ display:flex; flex-wrap:wrap; gap:6px; }
+.op-scale label{
+  position:relative; cursor:pointer;
+}
+.op-scale input{
+  position:absolute; opacity:0; width:1px; height:1px;
+}
+.op-scale span{
+  display:inline-block;
+  padding:6px 13px; border-radius:999px;
+  border:1px solid var(--hcd-line-strong);
+  background:var(--hcd-surface);
+  font-size:.76rem; font-weight:600; color:var(--hcd-ink-soft);
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.op-scale label:hover span{ border-color:var(--hcd-primary); color:var(--hcd-primary-dark); }
+.op-scale input:focus-visible + span{ outline:3px solid var(--hcd-accent); outline-offset:2px; }
+.op-scale input:checked + span{
+  background:var(--hcd-primary); border-color:var(--hcd-primary); color:#fff;
+}
+
+.op-beforeafter{
+  display:grid; grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:14px; margin-top:26px;
+}
+@media (max-width: 700px){
+  .op-beforeafter{ grid-template-columns:1fr; }
+}
+.op-ba{
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  padding:18px;
+  background:var(--hcd-surface);
+  position:relative;
+}
+.op-section:nth-of-type(even) .op-ba{ background:var(--hcd-bg); }
+.op-ba__label{
+  font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--hcd-accent); margin:0 0 8px;
+}
+.op-ba h3{ font-size:.98rem; margin:0 0 8px; }
+.op-ba p{ font-size:.86rem; color:var(--hcd-ink-soft); margin:0; }
+
+/* ---- Pipeline ----------------------------------------------------------- */
+.op-pipeline{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+  gap:10px;
+  list-style:none; padding:0; margin:0;
+  counter-reset:pipe;
+}
+.op-pipeline li{
+  position:relative;
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius-s);
+  padding:14px 14px 14px 16px;
+  font-size:.83rem; font-weight:600;
+  color:var(--hcd-ink-soft);
+  margin:0;
+}
+.op-pipeline li::before{
+  counter-increment:pipe;
+  content:counter(pipe, decimal-leading-zero);
+  display:block;
+  font-family:var(--hcd-mono);
+  font-size:.7rem; font-weight:700;
+  color:var(--hcd-accent);
+  margin-bottom:5px;
+}
+.op-pipeline--arrow li::after{
+  content:"";
+  position:absolute; right:-9px; top:50%;
+  width:8px; height:8px;
+  border-top:2px solid var(--hcd-line-strong);
+  border-right:2px solid var(--hcd-line-strong);
+  transform:translateY(-50%) rotate(45deg);
+}
+@media (max-width: 640px){
+  .op-pipeline--arrow li::after{ display:none; }
+}
+
+/* ---- Data architecture -------------------------------------------------- */
+.op-arch{
+  display:grid; gap:14px; margin-top:22px;
+}
+.op-arch__row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+  gap:10px;
+}
+.op-arch__box{
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius-s);
+  background:var(--hcd-surface);
+  padding:13px 15px;
+  font-size:.84rem; font-weight:600; color:var(--hcd-ink-soft);
+  text-align:center;
+}
+.op-arch__box--primary{
+  background:var(--hcd-primary); border-color:var(--hcd-primary); color:#fff;
+}
+.op-arch__arrow{
+  text-align:center; color:var(--hcd-accent); font-weight:700; font-size:1.1rem;
+  line-height:1;
+}
+.op-fieldlist{
+  display:flex; flex-wrap:wrap; gap:7px; list-style:none; padding:0; margin:0 0 8px;
+}
+.op-fieldlist li{
+  font-family:var(--hcd-mono);
+  font-size:.76rem;
+  padding:5px 11px;
+  border-radius:7px;
+  background:var(--hcd-primary-soft);
+  color:var(--hcd-primary-dark);
+  border:1px solid #cfe2e4;
+  margin:0;
+}
+
+/* ---- Folder tree -------------------------------------------------------- */
+.op-tree{
+  font-family:var(--hcd-mono);
+  font-size:.82rem;
+  line-height:1.85;
+  background:#0d2b2f;
+  color:#cfe6e8;
+  border-radius:var(--hcd-radius);
+  padding:20px 22px;
+  overflow-x:auto;
+  margin:0;
+  border:1px solid #123a40;
+}
+.op-tree .op-tree__root{ color:#f0d9ac; font-weight:700; }
+.op-tree .op-tree__note{ color:#7fa6aa; }
+
+/* ---- Checklist ---------------------------------------------------------- */
+.op-checklist{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:10px;
+  list-style:none; padding:0; margin:0;
+}
+@media (max-width: 700px){ .op-checklist{ grid-template-columns:1fr; } }
+.op-checklist li{ margin:0; }
+.op-check{
+  display:flex; align-items:flex-start; gap:11px;
+  padding:13px 16px;
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius-s);
+  background:var(--hcd-surface);
+  font-size:.88rem;
+  cursor:pointer;
+  transition:border-color .16s ease, background .16s ease;
+}
+.op-section:nth-of-type(even) .op-check{ background:var(--hcd-bg); }
+.op-check:hover{ border-color:var(--hcd-primary); }
+.op-check input{
+  flex:none; margin:3px 0 0;
+  width:17px; height:17px;
+  accent-color:var(--hcd-primary);
+  cursor:pointer;
+}
+.op-check input:checked ~ span{ color:var(--hcd-muted); text-decoration:line-through; }
+
+/* ---- Cadence columns ---------------------------------------------------- */
+.op-cadence{
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  background:var(--hcd-surface);
+  padding:20px;
+  height:100%;
+}
+.op-section:nth-of-type(even) .op-cadence{ background:var(--hcd-bg); }
+.op-cadence__head{
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:14px;
+  padding-bottom:12px;
+  border-bottom:2px solid var(--hcd-primary-soft);
+}
+.op-cadence__head h3{ font-size:.95rem; margin:0; }
+.op-cadence__badge{
+  font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:3px 9px; border-radius:999px;
+  background:var(--hcd-primary); color:#fff;
+}
+.op-cadence ul{ list-style:none; padding:0; margin:0; }
+.op-cadence li{
+  position:relative;
+  padding-left:20px;
+  font-size:.87rem;
+  color:var(--hcd-ink-soft);
+  margin-bottom:9px;
+}
+.op-cadence li::before{
+  content:"";
+  position:absolute; left:2px; top:.62em;
+  width:7px; height:7px; border-radius:50%;
+  background:var(--hcd-accent);
+}
+
+/* ---- KPI ---------------------------------------------------------------- */
+.op-kpi{
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius);
+  padding:20px 18px;
+  text-align:center;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.op-section:nth-of-type(even) .op-kpi{ background:var(--hcd-bg); }
+.op-kpi:hover{ transform:translateY(-2px); box-shadow:var(--hcd-shadow); }
+.op-kpi__value{
+  display:block;
+  font-family:var(--hcd-mono);
+  font-size:2rem;
+  font-weight:700;
+  color:var(--hcd-primary);
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  margin-bottom:8px;
+}
+.op-kpi__label{
+  display:block;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--hcd-ink-soft);
+  line-height:1.4;
+}
+.op-kpi__note{
+  display:block;
+  font-size:.68rem;
+  color:var(--hcd-muted);
+  margin-top:6px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+/* ---- Timeline ----------------------------------------------------------- */
+.op-timeline{ position:relative; list-style:none; padding:0; margin:0; }
+.op-timeline::before{
+  content:""; position:absolute; left:17px; top:8px; bottom:8px;
+  width:2px; background:var(--hcd-line-strong);
+}
+.op-timeline li{
+  position:relative;
+  display:flex; gap:18px;
+  padding-bottom:16px;
+  margin:0;
+}
+.op-timeline li:last-child{ padding-bottom:0; }
+.op-timeline__dot{
+  flex:none;
+  width:36px; height:36px; border-radius:50%;
+  background:var(--hcd-surface);
+  border:2px solid var(--hcd-primary);
+  color:var(--hcd-primary-dark);
+  display:grid; place-items:center;
+  font-size:.7rem; font-weight:700;
+  z-index:1;
+}
+.op-section:nth-of-type(even) .op-timeline__dot{ background:var(--hcd-bg); }
+.op-timeline__body{
+  flex:1 1 auto;
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-radius:var(--hcd-radius-s);
+  padding:13px 18px;
+}
+.op-section:nth-of-type(even) .op-timeline__body{ background:var(--hcd-bg); }
+.op-timeline__body h3{ font-size:.95rem; margin:0 0 4px; }
+.op-timeline__body p{ font-size:.86rem; color:var(--hcd-ink-soft); margin:0; }
+
+/* ---- Scaling model ------------------------------------------------------ */
+.op-scale-stack{ display:grid; gap:12px; }
+.op-scale-step{
+  border:1px solid var(--hcd-line);
+  border-left:5px solid var(--hcd-primary);
+  border-radius:var(--hcd-radius-s);
+  background:var(--hcd-surface);
+  padding:16px 20px;
+}
+.op-section:nth-of-type(even) .op-scale-step{ background:var(--hcd-bg); }
+.op-scale-step--accent{ border-left-color:var(--hcd-accent); }
+.op-scale-step h3{ font-size:.95rem; margin:0 0 5px; }
+.op-scale-step p{ font-size:.87rem; color:var(--hcd-ink-soft); margin:0; }
+.op-scale-stack__arrow{
+  text-align:center; color:var(--hcd-accent); font-size:1.1rem; line-height:1;
+}
+
+/* ---- Responsibility matrix ---------------------------------------------- */
+.op-matrix td:not(:first-child),
+.op-matrix th:not(:first-child){ text-align:center; }
+.op-matrix .op-mark{
+  display:inline-block;
+  font-size:.74rem; font-weight:700;
+  padding:3px 9px; border-radius:6px;
+  white-space:nowrap;
+}
+.op-mark--lead{ background:var(--hcd-primary); color:#fff; }
+.op-mark--support{ background:var(--hcd-primary-soft); color:var(--hcd-primary-dark); }
+.op-mark--none{ background:transparent; color:#b7b1a6; }
+
+@media (max-width: 780px){
+  .op-matrix{ min-width:0; }
+  .op-matrix thead{ display:none; }
+  .op-matrix tbody tr{
+    display:block;
+    border:1px solid var(--hcd-line);
+    border-radius:var(--hcd-radius-s);
+    margin-bottom:12px;
+    padding:6px 14px;
+    background:var(--hcd-surface);
+  }
+  .op-section:nth-of-type(even) .op-matrix tbody tr{ background:var(--hcd-bg); }
+  .op-matrix tbody td{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:14px;
+    border:0;
+    padding:8px 0;
+    text-align:right;
+  }
+  .op-matrix tbody td + td{ border-top:1px dashed var(--hcd-line-strong); }
+  .op-matrix tbody td::before{
+    content:attr(data-label);
+    font-size:.74rem; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--hcd-muted);
+    text-align:left;
+  }
+  .op-matrix td:first-child{
+    display:block;
+    font-size:.95rem;
+    font-weight:700;
+    padding-bottom:6px;
+  }
+  .op-matrix td:first-child::before{ display:none; }
+}
+
+/* ---- Principles --------------------------------------------------------- */
+.op-principle{
+  background:var(--hcd-surface);
+  border:1px solid var(--hcd-line);
+  border-top:3px solid var(--hcd-accent);
+  border-radius:var(--hcd-radius);
+  padding:20px;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.op-section:nth-of-type(even) .op-principle{ background:var(--hcd-bg); }
+.op-principle:hover{ transform:translateY(-2px); box-shadow:var(--hcd-shadow); }
+.op-principle h3{ font-size:1rem; margin:0 0 8px; color:var(--hcd-primary-dark); }
+.op-principle p{ font-size:.88rem; color:var(--hcd-ink-soft); margin:0; }
+
+/* ---- CTA ---------------------------------------------------------------- */
+.op-cta{
+  background:linear-gradient(160deg,#0b5563 0%, #073b45 100%);
+  color:#fff;
+  border-radius:var(--hcd-radius);
+  padding:44px 34px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.op-cta::before{
+  content:"";
+  position:absolute; inset:-40% -20% auto auto;
+  width:420px; height:420px; border-radius:50%;
+  background:radial-gradient(circle, rgba(184,121,31,.3), transparent 68%);
+}
+.op-cta > *{ position:relative; }
+.op-cta h2{
+  font-family:var(--hcd-serif);
+  font-size:clamp(1.35rem, 3.4vw, 1.9rem);
+  margin:0 0 14px;
+}
+.op-cta p{
+  max-width:60ch; margin:0 auto 26px;
+  color:rgba(255,255,255,.88); font-size:.96rem;
+}
+.op-cta__actions{
+  display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
+}
+.op-btn{
+  display:inline-flex; align-items:center; gap:9px;
+  padding:13px 22px;
+  border-radius:10px;
+  font-size:.85rem; font-weight:700; letter-spacing:.04em;
+  text-decoration:none;
+  border:1px solid transparent;
+  transition:transform .16s ease, background .16s ease, border-color .16s ease, color .16s ease;
+}
+.op-btn:hover{ transform:translateY(-1px); }
+.op-btn--primary{ background:var(--hcd-accent); color:#2b1c04; }
+.op-btn--primary:hover{ background:#c98a2c; color:#2b1c04; }
+.op-btn--ghost{
+  background:transparent; color:#fff;
+  border-color:rgba(255,255,255,.42);
+}
+.op-btn--ghost:hover{ background:rgba(255,255,255,.12); color:#fff; border-color:#fff; }
+.op-btn--muted{
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.72);
+  border-color:rgba(255,255,255,.2);
+  cursor:not-allowed;
+}
+.op-btn--muted:hover{ transform:none; }
+.op-cta__note{
+  margin-top:20px;
+  font-size:.76rem;
+  color:rgba(255,255,255,.6);
+}
+
+/* ==========================================================================
+   6. FOOTER + UTILITIES
+   ========================================================================== */
+.op-footer{
+  background:var(--hcd-ink);
+  color:#a9b6b4;
+  padding:44px 0 34px;
+  font-size:.86rem;
+}
+.op-footer__grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr 1fr;
+  gap:30px;
+  margin-bottom:28px;
+}
+@media (max-width: 760px){
+  .op-footer__grid{ grid-template-columns:1fr; gap:22px; }
+}
+.op-footer h3{
+  color:#fff; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase;
+  margin:0 0 12px;
+}
+.op-footer ul{ list-style:none; padding:0; margin:0; }
+.op-footer li{ margin-bottom:8px; }
+.op-footer a{ color:#cfd9d8; text-decoration:none; }
+.op-footer a:hover{ color:#fff; text-decoration:underline; }
+.op-footer__brand{
+  display:flex; align-items:center; gap:11px; margin-bottom:14px;
+}
+.op-footer__brand .op-brand__mark{ background:rgba(255,255,255,.12); }
+.op-footer__brand strong{ color:#fff; font-size:.95rem; }
+.op-footer__legal{
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:20px;
+  font-size:.78rem;
+  color:#8b9896;
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between;
+}
+.op-footer__legal p{ margin:0; max-width:70ch; }
+
+.op-top{
+  position:fixed; right:20px; bottom:20px; z-index:70;
+  width:46px; height:46px; border-radius:50%;
+  border:1px solid var(--hcd-line-strong);
+  background:var(--hcd-surface);
+  color:var(--hcd-primary-dark);
+  display:grid; place-items:center;
+  cursor:pointer;
+  box-shadow:var(--hcd-shadow);
+  opacity:0; visibility:hidden; transform:translateY(10px);
+  transition:opacity .22s ease, transform .22s ease, visibility .22s;
+}
+.op-top.is-visible{ opacity:1; visibility:visible; transform:translateY(0); }
+.op-top:hover{ background:var(--hcd-primary); color:#fff; border-color:var(--hcd-primary); }
+.op-top svg{ width:18px; height:18px; }
+
+/* ==========================================================================
+   7. REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
+
+/* ==========================================================================
+   8. PRINT
+   ========================================================================== */
+@media print{
+  :root{ --hcd-bg:#fff; --hcd-surface:#fff; }
+  body{ background:#fff; font-size:11pt; }
+  .op-header,
+  .op-sectionnav,
+  .op-top,
+  .op-filterbar,
+  .op-toggleall,
+  .op-skip,
+  .op-cta__actions{ display:none !important; }
+  .op-hero{
+    background:#fff !important; color:#000 !important;
+    padding:0 0 18px; border-bottom:2px solid #000;
+  }
+  .op-hero h1{ font-size:22pt; }
+  .op-hero__eyebrow,
+  .op-hero__sub,
+  .op-hero__desc{ color:#333 !important; }
+  .op-pill{ border-color:#999; color:#333 !important; background:#fff !important; }
+  .op-section{
+    padding:16px 0;
+    border-bottom:1px solid #ccc;
+    break-inside:avoid-page;
+    page-break-inside:avoid;
+  }
+  .op-section:nth-of-type(even){ background:#fff !important; }
+  .op-card,
+  .op-details,
+  .op-score-row,
+  .op-kpi,
+  .op-cadence,
+  .op-principle,
+  .op-tablewrap{
+    box-shadow:none !important;
+    border:1px solid #ccc !important;
+    break-inside:avoid;
+  }
+  .op-details > summary::after{ display:none; }
+  .op-details__body{ display:block !important; }
+  .op-table{ min-width:0; font-size:9pt; }
+  .op-table thead th{ background:#eee !important; color:#000 !important; }
+  .op-tree{ background:#f4f4f4; color:#111; border-color:#ccc; }
+  .op-tree .op-tree__root{ color:#000; }
+  .op-cta{ background:#fff !important; color:#000 !important; border:2px solid #000; }
+  .op-cta p, .op-cta__note{ color:#333 !important; }
+  .op-footer{ background:#fff; color:#333; border-top:1px solid #ccc; }
+  .op-footer h3, .op-footer strong{ color:#000; }
+  .op-footer a{ color:#000; }
+  a[href^="http"]::after{ content:" (" attr(href) ")"; font-size:8pt; color:#555; }
+}
+</style>
+</head>
+
+<body>
+
+<a class="op-skip" href="#main">Skip to main content</a>
+
+<!-- ==========================================================================
+     HEADER
+     ========================================================================== -->
+<header class="op-header">
+  <div class="op-header__inner">
+
+    <a class="op-brand" href="index.html">
+      <span class="op-brand__mark" aria-hidden="true">HC</span>
+      <span class="op-brand__text">
+        <small>Harar City</small>
+        <span>Digital Visibility Initiative</span>
+      </span>
+    </a>
+
+    <!-- Adjust these items to mirror the existing site navigation / tab bar. -->
+    <nav class="op-nav" id="op-nav" aria-label="Primary">
+      <a class="op-nav__link" href="index.html">Overview</a>
+      <a class="op-nav__link" href="index.html">Proposal</a>
+      <a class="op-nav__link" href="index.html">Team, Tools &amp; Equipment</a>
+      <a class="op-nav__link" href="index.html">Business Mapping Tool</a>
+      <a class="op-nav__link" href="operational-setup.html" aria-current="page">Operational Setup</a>
+    </nav>
+
+    <div class="op-header__actions">
+      <button type="button" class="op-iconbtn" id="op-print" aria-label="Print this page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        <span class="op-label">Print</span>
+      </button>
+
+      <button type="button" class="op-iconbtn op-burger" id="op-burger"
+              aria-expanded="false" aria-controls="op-nav" aria-label="Open navigation menu">
+        <span class="op-burger__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ==========================================================================
+     SECTION NAVIGATION
+     ========================================================================== -->
+<nav class="op-sectionnav" aria-label="Page sections">
+  <div class="op-sectionnav__inner">
+    <div class="op-chips" id="op-chips">
+      <a class="op-chip" href="#operating-model">01 Operating Model</a>
+      <a class="op-chip" href="#team-structure">02 Team</a>
+      <a class="op-chip" href="#field-team">03 Field Team</a>
+      <a class="op-chip" href="#equipment">04 Equipment</a>
+      <a class="op-chip" href="#software">05 Software</a>
+      <a class="op-chip" href="#workflow">06 Workflow</a>
+      <a class="op-chip" href="#onboarding">07 Onboarding</a>
+      <a class="op-chip" href="#audit">08 Digital Audit</a>
+      <a class="op-chip" href="#content">09 Content</a>
+      <a class="op-chip" href="#data">10 Data</a>
+      <a class="op-chip" href="#assets">11 Assets</a>
+      <a class="op-chip" href="#quality">12 Quality</a>
+      <a class="op-chip" href="#operations">13 Cadence</a>
+      <a class="op-chip" href="#infrastructure">14 Infrastructure</a>
+      <a class="op-chip" href="#security">15 Security</a>
+      <a class="op-chip" href="#kpis">16 KPIs</a>
+      <a class="op-chip" href="#phasing">17 Phasing</a>
+      <a class="op-chip" href="#scaling">18 Scaling</a>
+      <a class="op-chip" href="#responsibility">19 Responsibility</a>
+      <a class="op-chip" href="#principles">20 Principles</a>
+      <a class="op-chip" href="#cta">21 Next Step</a>
+    </div>
+    <button type="button" class="op-toggleall" id="op-toggleall"
+            aria-expanded="false" aria-controls="main">
+      <span>Expand all</span>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+  <!-- ========================================================================
+       HERO
+       ======================================================================== -->
+  <section class="op-hero" aria-labelledby="op-hero-title">
+    <div class="op-container">
+      <p class="op-hero__eyebrow">Programme Implementation Handbook</p>
+      <h1 id="op-hero-title">Operational Setup</h1>
+      <p class="op-hero__sub">People &bull; Tools &bull; Equipment &bull; Systems &bull; Workflow</p>
+      <p class="op-hero__desc">
+        From programme strategy to field implementation — the operational structure required
+        to build, manage and sustain Harar's digital visibility ecosystem.
+      </p>
+      <div class="op-hero__meta">
+        <span class="op-pill">Extends the main initiative proposal</span>
+        <span class="op-pill">Pilot-oriented</span>
+        <span class="op-pill op-pill--warn">Planning framework — not a procurement order</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 01 — OPERATING MODEL
+       ======================================================================== -->
+  <section class="op-section" id="operating-model" aria-labelledby="h-operating-model">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 01</p>
+      <h2 class="op-h2" id="h-operating-model">Operating Model</h2>
+      <p class="op-lead">
+        The programme runs as a layered operating model. Each layer has a defined function,
+        a defined owner and a defined output that feeds the layer below it. Information flows
+        downward as instructions and upward as verified data and reports.
+      </p>
+
+      <ol class="op-flow">
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">01</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Mandate</span>
+            <h3>City Administration / Programme Governance</h3>
+            <p>Provides the mandate, approves scope, budget and data-governance rules, and receives programme reporting. Owns the decision to proceed from pilot to scale.</p>
+          </div>
+        </li>
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">02</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Direction</span>
+            <h3>Programme Management</h3>
+            <p>Converts the approved mandate into plans, schedules, budgets, risk controls and team coordination. Owns delivery performance.</p>
+          </div>
+        </li>
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">03</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Collection</span>
+            <h3>Field Operations</h3>
+            <p>Identifies businesses, verifies information, obtains consent, captures location data and conducts baseline digital audits on site.</p>
+          </div>
+        </li>
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">04</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Production</span>
+            <h3>Digital Production</h3>
+            <p>Turns field material into finished assets: edited photography, business descriptions, brand assets, listings and web content.</p>
+          </div>
+        </li>
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">05</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Adoption</span>
+            <h3>Business Support</h3>
+            <p>Trains and coaches owners and staff so the improved digital presence is maintained by the business after the intervention.</p>
+          </div>
+        </li>
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">06</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Publication</span>
+            <h3>Digital Platform / Directory</h3>
+            <p>Hosts and maintains the city discovery layer — directory entries, map listings and web profiles — and keeps published information current.</p>
+          </div>
+        </li>
+        <li class="op-flow__node">
+          <span class="op-flow__marker" aria-hidden="true">07</span>
+          <div class="op-flow__body">
+            <span class="op-flow__tag">Learning</span>
+            <h3>Monitoring &amp; Reporting</h3>
+            <p>Measures outputs and outcomes against the KPI framework, re-audits participating businesses and reports back to governance.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="op-note op-note--info">
+        <span class="op-note__icon" aria-hidden="true">i</span>
+        <p><strong>This is a functional model, not a fixed org chart.</strong> During the pilot, one person may hold more than one function, and some functions may be delivered by a partner organisation. Role separation should increase as the programme scales.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 02 — TEAM STRUCTURE
+       ======================================================================== -->
+  <section class="op-section" id="team-structure" aria-labelledby="h-team">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 02</p>
+      <h2 class="op-h2" id="h-team">Team Structure</h2>
+      <p class="op-lead">
+        Eleven functions are required to operate the programme. Responsibilities below describe
+        what each function owns — not how many people must be hired. In a pilot, these functions
+        are typically combined across a much smaller team.
+      </p>
+
+      <div class="op-grid op-grid--3">
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">01</span>
+            <div>
+              <h3>Programme Lead</h3>
+              <p class="op-card__role">Accountability</p>
+            </div>
+          </div>
+          <ul>
+            <li>Holds overall accountability for delivery and quality.</li>
+            <li>Liaises with the City Administration and programme governance.</li>
+            <li>Approves scope, budget, governance rules and publication policy.</li>
+            <li>Represents the programme to stakeholders and partners.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Programme Governance / City Administration</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">02</span>
+            <div>
+              <h3>Project / Operations Manager</h3>
+              <p class="op-card__role">Delivery</p>
+            </div>
+          </div>
+          <ul>
+            <li>Runs day-to-day delivery across all workstreams.</li>
+            <li>Owns schedules, logistics, procurement and budget tracking.</li>
+            <li>Maintains the risk log and issue register.</li>
+            <li>Coordinates the field, production and data teams.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Programme Lead</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">03</span>
+            <div>
+              <h3>Field Coordinator</h3>
+              <p class="op-card__role">Field operations</p>
+            </div>
+          </div>
+          <ul>
+            <li>Leads and supervises the field team.</li>
+            <li>Plans routes, clusters and business visit schedules.</li>
+            <li>Oversees the consent process and field conduct standards.</li>
+            <li>Checks field data quality before handover to production.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Project / Operations Manager</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">04</span>
+            <div>
+              <h3>Digital Auditors</h3>
+              <p class="op-card__role">Baseline &amp; re-audit</p>
+            </div>
+          </div>
+          <ul>
+            <li>Conduct baseline digital presence audits for each business.</li>
+            <li>Record findings using the standard audit scorecard.</li>
+            <li>Verify business information, location and contact details.</li>
+            <li>Re-audit after intervention using the same scorecard.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Field Coordinator</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">05</span>
+            <div>
+              <h3>Photographers / Content Creators</h3>
+              <p class="op-card__role">Visual production</p>
+            </div>
+          </div>
+          <ul>
+            <li>Photograph businesses, premises, products and services.</li>
+            <li>Capture short video where the programme scope includes it.</li>
+            <li>Select and hand over images using the agreed file naming rules.</li>
+            <li>Work within consent and privacy conditions at all times.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Field Coordinator</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">06</span>
+            <div>
+              <h3>Web / GIS / Mapping Team</h3>
+              <p class="op-card__role">Platform &amp; location</p>
+            </div>
+          </div>
+          <ul>
+            <li>Creates and updates map listings, directory entries and web profiles.</li>
+            <li>Verifies coordinates and location accuracy.</li>
+            <li>Maintains the website and any directory infrastructure.</li>
+            <li>Checks links, mobile display and duplicate listings.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Project / Operations Manager</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">07</span>
+            <div>
+              <h3>Graphic / Brand Designer</h3>
+              <p class="op-card__role">Brand assets</p>
+            </div>
+          </div>
+          <ul>
+            <li>Cleans up, redraws or standardises business logo and brand assets.</li>
+            <li>Produces listing visuals and social media templates.</li>
+            <li>Maintains visual consistency across published content.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Digital Production</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">08</span>
+            <div>
+              <h3>Data / Documentation Officer</h3>
+              <p class="op-card__role">Records &amp; database</p>
+            </div>
+          </div>
+          <ul>
+            <li>Enters and maintains records in the business master database.</li>
+            <li>Files consent records and field documentation.</li>
+            <li>Runs duplicate checks and data hygiene passes.</li>
+            <li>Manages backups and the archive structure.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Project / Operations Manager</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">09</span>
+            <div>
+              <h3>Training &amp; Community Engagement Officer</h3>
+              <p class="op-card__role">Adoption</p>
+            </div>
+          </div>
+          <ul>
+            <li>Delivers training and coaching to business owners and staff.</li>
+            <li>Prepares training materials and simple how-to guides.</li>
+            <li>Handles community liaison and multilingual communication needs.</li>
+            <li>Collects feedback from participating businesses.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Programme Lead</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">10</span>
+            <div>
+              <h3>Monitoring &amp; Evaluation Officer</h3>
+              <p class="op-card__role">Measurement</p>
+            </div>
+          </div>
+          <ul>
+            <li>Maintains the KPI framework and data collection tools.</li>
+            <li>Analyses progress and produces periodic reports.</li>
+            <li>Runs post-intervention review points.</li>
+            <li>Documents lessons learned for scale-up.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Programme Lead</p>
+        </article>
+
+        <article class="op-card">
+          <div class="op-card__top">
+            <span class="op-card__num" aria-hidden="true">11</span>
+            <div>
+              <h3>IT / Technical Support</h3>
+              <p class="op-card__role">Infrastructure</p>
+            </div>
+          </div>
+          <ul>
+            <li>Sets up and maintains devices, accounts and connectivity.</li>
+            <li>Manages access permissions and account security.</li>
+            <li>Runs backup routines and restores when required.</li>
+            <li>Resolves technical issues for the field and production teams.</li>
+          </ul>
+          <p class="op-card__meta"><b>Reports to:</b> Project / Operations Manager</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 03 — FIELD TEAM MODEL
+       ======================================================================== -->
+  <section class="op-section" id="field-team" aria-labelledby="h-field-team">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 03</p>
+      <h2 class="op-h2" id="h-field-team">Field Team Model</h2>
+      <p class="op-lead">
+        A practical pilot configuration. This is a planning guide for one field team operating in
+        one district or cluster — not a mandatory staffing requirement.
+      </p>
+
+      <div class="op-tablewrap op-tablewrap--scroll" tabindex="0" role="region"
+           aria-label="Pilot field team composition, scroll horizontally to view all columns">
+        <table class="op-table">
+          <caption>Pilot field team — planning guide</caption>
+          <thead>
+            <tr>
+              <th scope="col">Role</th>
+              <th scope="col">Planning guide</th>
+              <th scope="col">Primary field responsibility</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Programme Supervisor</td>
+              <td><span class="op-qty">1</span></td>
+              <td>Oversight, quality assurance, escalation point, liaison with programme management.</td>
+            </tr>
+            <tr>
+              <td>Field Coordinator</td>
+              <td><span class="op-qty">1</span></td>
+              <td>Daily field leadership, scheduling, consent oversight, field data quality.</td>
+            </tr>
+            <tr>
+              <td>Digital Auditors</td>
+              <td><span class="op-qty">2–4</span></td>
+              <td>Business verification, baseline digital audits, information accuracy checks.</td>
+            </tr>
+            <tr>
+              <td>Photographers</td>
+              <td><span class="op-qty">1–2</span></td>
+              <td>Business photography, image selection, handover of raw assets.</td>
+            </tr>
+            <tr>
+              <td>Data / Documentation Officer</td>
+              <td><span class="op-qty">1</span></td>
+              <td>Same-day data entry, filing, consent records, duplicate checking.</td>
+            </tr>
+            <tr>
+              <td>Technical / Mapping Specialist</td>
+              <td><span class="op-qty">1</span></td>
+              <td>Coordinate capture, map listing setup, field device support.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>Team size is scalable.</strong> The numbers above are planning assumptions only. Actual team size should be adjusted according to the number of businesses in scope, geographic coverage, pilot duration, available budget and production requirements. A smaller cluster may be delivered by a combined team of three or four people; a larger cluster may require two or more parallel field teams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 04 — EQUIPMENT & MATERIALS
+       ======================================================================== -->
+  <section class="op-section" id="equipment" aria-labelledby="h-equipment">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 04</p>
+      <h2 class="op-h2" id="h-equipment">Equipment &amp; Materials</h2>
+      <p class="op-lead">
+        An equipment matrix organised by category. Quantities are editable planning placeholders —
+        they must be confirmed against the approved pilot scope and budget before any procurement.
+      </p>
+
+      <div class="op-filterbar">
+        <div class="op-filterbar__search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+          </svg>
+          <label class="op-vh" for="equip-search">Search equipment and materials</label>
+          <input type="search" id="equip-search" placeholder="Search equipment or material…" autocomplete="off">
+        </div>
+        <div class="op-filters" role="group" aria-label="Filter equipment by category">
+          <button type="button" class="op-filter" data-equip-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="op-filter" data-equip-filter="photography" aria-pressed="false">Photography</button>
+          <button type="button" class="op-filter" data-equip-filter="field" aria-pressed="false">Field Data</button>
+          <button type="button" class="op-filter" data-equip-filter="production" aria-pressed="false">Production</button>
+          <button type="button" class="op-filter" data-equip-filter="office" aria-pressed="false">Office</button>
+          <button type="button" class="op-filter" data-equip-filter="materials" aria-pressed="false">Field Materials</button>
+        </div>
+      </div>
+
+      <p class="op-resultcount" id="equip-count" aria-live="polite">Showing all items.</p>
+
+      <div class="op-tablewrap op-tablewrap--scroll" tabindex="0" role="region"
+           aria-label="Equipment matrix, scroll horizontally to view all columns">
+        <table class="op-table" id="equip-table">
+          <caption>Equipment matrix — categories, purpose, suggested quantity and priority</caption>
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Purpose</th>
+              <th scope="col">Suggested quantity</th>
+              <th scope="col">Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- Photography -->
+            <tr data-cat="photography">
+              <td>DSLR / mirrorless camera</td>
+              <td>Primary business, product and premises photography.</td>
+              <td><span class="op-qty">1 per photography kit</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Smartphone with high-quality camera</td>
+              <td>Backup capture, quick updates and social content.</td>
+              <td><span class="op-qty">1 per field member</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Tripod</td>
+              <td>Stable interior, product and low-light shots.</td>
+              <td><span class="op-qty">1 per photography kit</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Portable LED lights</td>
+              <td>Interior and product lighting where natural light is poor.</td>
+              <td><span class="op-qty">1–2 per kit</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Reflector</td>
+              <td>Fill light for products and interior details.</td>
+              <td><span class="op-qty">1 per kit</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Camera batteries (spares)</td>
+              <td>Continuous field use without interruption.</td>
+              <td><span class="op-qty">2–3 spares per camera</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Memory cards</td>
+              <td>In-field image storage and transfer.</td>
+              <td><span class="op-qty">2 per camera</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="photography">
+              <td>Camera bag</td>
+              <td>Protection and transport of photographic equipment.</td>
+              <td><span class="op-qty">1 per camera</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+
+            <!-- Field Data Collection -->
+            <tr data-cat="field">
+              <td>Smartphones / tablets</td>
+              <td>Digital forms, audit scorecards, verification.</td>
+              <td><span class="op-qty">1 per field member</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="field">
+              <td>Power banks</td>
+              <td>Device charging during full field days.</td>
+              <td><span class="op-qty">1 per field member</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="field">
+              <td>Laptop computers (field)</td>
+              <td>On-site entry, review and synchronisation.</td>
+              <td><span class="op-qty">1 per 2 field staff</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="field">
+              <td>Mobile internet devices / data SIMs</td>
+              <td>Uploads, map verification and team communication.</td>
+              <td><span class="op-qty">1 per field team</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="field">
+              <td>GPS / location-enabled devices</td>
+              <td>Coordinate capture where smartphone accuracy is insufficient.</td>
+              <td><span class="op-qty">Use existing devices first</span></td>
+              <td><span class="op-tag op-tag--optional">Optional</span></td>
+            </tr>
+            <tr data-cat="field">
+              <td>Notebooks and field forms</td>
+              <td>Backup capture when devices fail or connectivity drops.</td>
+              <td><span class="op-qty">As required</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+            <tr data-cat="field">
+              <td>ID / authorisation materials</td>
+              <td>Field identification and official programme credentials.</td>
+              <td><span class="op-qty">1 set per field member</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+
+            <!-- Digital Production -->
+            <tr data-cat="production">
+              <td>Laptops / desktops</td>
+              <td>Editing, publishing, database and mapping work.</td>
+              <td><span class="op-qty">1 per production station</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="production">
+              <td>External storage / backup drives</td>
+              <td>Asset archive and disaster recovery.</td>
+              <td><span class="op-qty">2 (primary + backup)</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="production">
+              <td>Card readers</td>
+              <td>Transfer of images from camera to workstation.</td>
+              <td><span class="op-qty">1 per workstation</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="production">
+              <td>Headphones</td>
+              <td>Review of video or audio content where produced.</td>
+              <td><span class="op-qty">As required</span></td>
+              <td><span class="op-tag op-tag--optional">Optional</span></td>
+            </tr>
+            <tr data-cat="production">
+              <td>Monitor / display</td>
+              <td>Accurate image review and quality control.</td>
+              <td><span class="op-qty">1 per production station</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+
+            <!-- Office Operations -->
+            <tr data-cat="office">
+              <td>Desks and chairs</td>
+              <td>Team workstations and coordination space.</td>
+              <td><span class="op-qty">Per team size</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="office">
+              <td>Printer / scanner</td>
+              <td>Consent forms, field forms and physical filing.</td>
+              <td><span class="op-qty">1</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+            <tr data-cat="office">
+              <td>Internet connection</td>
+              <td>Uploads, cloud storage, communication and reporting.</td>
+              <td><span class="op-qty">1 shared connection</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="office">
+              <td>Router</td>
+              <td>Network distribution across the coordination space.</td>
+              <td><span class="op-qty">1</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="office">
+              <td>UPS / power backup</td>
+              <td>Protection against outages during production and upload.</td>
+              <td><span class="op-qty">1 per workstation cluster</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+            <tr data-cat="office">
+              <td>Filing / storage system</td>
+              <td>Physical records, consent forms and reference documents.</td>
+              <td><span class="op-qty">1 system</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+
+            <!-- Field Materials -->
+            <tr data-cat="materials">
+              <td>Programme identification materials</td>
+              <td>Badges, vests or letters establishing field credibility.</td>
+              <td><span class="op-qty">1 set per field member</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="materials">
+              <td>Business information forms</td>
+              <td>Standardised capture of business details on site.</td>
+              <td><span class="op-qty">Per business visit</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="materials">
+              <td>Consent / authorisation forms</td>
+              <td>Documented permission for data collection and publication.</td>
+              <td><span class="op-qty">Per business</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="materials">
+              <td>Checklists</td>
+              <td>Field completeness and quality-control verification.</td>
+              <td><span class="op-qty">Per visit</span></td>
+              <td><span class="op-tag op-tag--essential">Essential</span></td>
+            </tr>
+            <tr data-cat="materials">
+              <td>Field bags</td>
+              <td>Transport of forms, devices and small equipment.</td>
+              <td><span class="op-qty">1 per field member</span></td>
+              <td><span class="op-tag op-tag--recommended">Recommended</span></td>
+            </tr>
+            <tr data-cat="materials">
+              <td>Protective equipment</td>
+              <td>Safety in adverse weather or difficult site conditions.</td>
+              <td><span class="op-qty">As required</span></td>
+              <td><span class="op-tag op-tag--optional">Optional</span></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div id="equip-empty" class="op-empty" hidden>No items match the current filter or search term.</div>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>Quantities are placeholders.</strong> Exact procurement numbers have not been established. Confirm all quantities against the approved pilot scope, existing assets and available budget before purchasing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 05 — SOFTWARE & DIGITAL TOOLS
+       ======================================================================== -->
+  <section class="op-section" id="software" aria-labelledby="h-software">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 05</p>
+      <h2 class="op-h2" id="h-software">Software &amp; Digital Tools</h2>
+      <p class="op-lead">
+        A candidate software stack grouped by function. Tools are marked as
+        <strong>Recommended</strong> or <strong>Alternative</strong>. Nothing here should be treated
+        as an official selection unless it has been formally approved.
+      </p>
+
+      <div class="op-filterbar">
+        <div class="op-filterbar__search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+          </svg>
+          <label class="op-vh" for="tool-search">Search software and tools</label>
+          <input type="search" id="tool-search" placeholder="Search a tool or function…" autocomplete="off">
+        </div>
+        <div class="op-filters" role="group" aria-label="Filter tools by status">
+          <button type="button" class="op-filter" data-tool-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="op-filter" data-tool-filter="recommended" aria-pressed="false">Recommended</button>
+          <button type="button" class="op-filter" data-tool-filter="alternative" aria-pressed="false">Alternative</button>
+        </div>
+      </div>
+
+      <p class="op-resultcount" id="tool-count" aria-live="polite">Showing all tools.</p>
+
+      <div class="op-grid op-grid--3" id="tool-grid">
+
+        <article class="op-card" data-tool-card data-function="data collection">
+          <h3>Data Collection</h3>
+          <ul>
+            <li>Google Forms <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>KoboToolbox <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>ODK <span class="op-tag op-tag--alt">Alternative</span></li>
+          </ul>
+          <p class="op-card__meta">Used for business information forms, field checklists and audit capture.</p>
+        </article>
+
+        <article class="op-card" data-tool-card data-function="mapping">
+          <h3>Mapping</h3>
+          <ul>
+            <li>Google Maps <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Google Business Profile <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>OpenStreetMap <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>QGIS <span class="op-tag op-tag--alt">Alternative</span></li>
+          </ul>
+          <p class="op-card__meta">Used for location verification, map listings and coordinate management. QGIS is a specialist option where spatial analysis is required.</p>
+        </article>
+
+        <article class="op-card" data-tool-card data-function="website">
+          <h3>Website</h3>
+          <ul>
+            <li>HTML <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>CSS <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>JavaScript <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>GitHub Pages <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>CMS / database <span class="op-tag op-tag--alt">Alternative</span></li>
+          </ul>
+          <p class="op-card__meta">GitHub Pages is suitable for a static pilot presence. A CMS or database should only be considered if the programme requires dynamic content or self-service updating.</p>
+        </article>
+
+        <article class="op-card" data-tool-card data-function="design">
+          <h3>Design</h3>
+          <ul>
+            <li>Figma <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Canva <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Adobe Photoshop <span class="op-tag op-tag--alt">Alternative</span></li>
+            <li>Adobe Illustrator <span class="op-tag op-tag--alt">Alternative</span></li>
+          </ul>
+          <p class="op-card__meta">For brand asset clean-up, listing visuals and social templates.</p>
+        </article>
+
+        <article class="op-card" data-tool-card data-function="photography editing">
+          <h3>Photography</h3>
+          <ul>
+            <li>Adobe Lightroom <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Adobe Photoshop <span class="op-tag op-tag--alt">Alternative</span></li>
+            <li>Mobile editing tools <span class="op-tag op-tag--alt">Alternative</span></li>
+          </ul>
+          <p class="op-card__meta">For image selection, colour correction, cropping and export to publishing specifications.</p>
+        </article>
+
+        <article class="op-card" data-tool-card data-function="project management">
+          <h3>Project Management</h3>
+          <ul>
+            <li>Google Drive <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Google Sheets <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Trello <span class="op-tag op-tag--alt">Alternative</span></li>
+            <li>Notion <span class="op-tag op-tag--alt">Alternative</span></li>
+          </ul>
+          <p class="op-card__meta">For task tracking, asset storage, progress registers and shared working files.</p>
+        </article>
+
+        <article class="op-card" data-tool-card data-function="communication">
+          <h3>Communication</h3>
+          <ul>
+            <li>Email <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>WhatsApp <span class="op-tag op-tag--rec">Recommended</span></li>
+            <li>Telegram <span class="op-tag op-tag--alt">Alternative</span></li>
+            <li>Official programme channels <span class="op-tag op-tag--rec">Recommended</span></li>
+          </ul>
+          <p class="op-card__meta">Internal coordination and business follow-up. Official communications with the City Administration should use formal programme channels.</p>
+        </article>
+
+      </div>
+
+      <div id="tool-empty" class="op-empty" hidden>No tools match the current filter or search term.</div>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>No official tool selection is implied.</strong> Unless a tool has been formally approved in the main proposal or by the City Administration, treat it as an option for planning. During the pilot, prefer free, already-licensed or low-cost tools to reduce dependency and cost.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 06 — FIELD WORKFLOW
+       ======================================================================== -->
+  <section class="op-section" id="workflow" aria-labelledby="h-workflow">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 06</p>
+      <h2 class="op-h2" id="h-workflow">Field Workflow</h2>
+      <p class="op-lead">
+        The standard sequence followed for every business in the programme. Steps 1–6 are field
+        activities, steps 7–11 are production and monitoring activities, and step 12 closes the loop.
+      </p>
+
+      <ol class="op-pipeline op-pipeline--arrow">
+        <li>Select Business</li>
+        <li>Verify Business Information</li>
+        <li>Collect Location Data</li>
+        <li>Conduct Digital Presence Audit</li>
+        <li>Photograph Business</li>
+        <li>Collect Business Description / Services</li>
+        <li>Prepare Digital Assets</li>
+        <li>Improve / Create Digital Presence</li>
+        <li>Publish / Update Approved Information</li>
+        <li>Quality Check</li>
+        <li>Monitor Performance</li>
+        <li>Report Results</li>
+      </ol>
+
+      <div class="op-note op-note--info">
+        <span class="op-note__icon" aria-hidden="true">i</span>
+        <p><strong>Consent precedes capture.</strong> No photography, data entry or publication may proceed for a business until its consent record is documented and linked to the business ID.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 07 — BUSINESS ONBOARDING SYSTEM
+       ======================================================================== -->
+  <section class="op-section" id="onboarding" aria-labelledby="h-onboarding">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 07</p>
+      <h2 class="op-h2" id="h-onboarding">Business Onboarding System</h2>
+      <p class="op-lead">
+        Eight stages take a business from first identification to ongoing monitoring. Each stage
+        has a responsible team, required information, a defined output and a quality-control
+        checkpoint. Expand a stage to view its detail.
+      </p>
+
+      <ol class="op-chain" aria-label="Onboarding stage sequence">
+        <li>Identify</li>
+        <li>Verify</li>
+        <li>Consent</li>
+        <li>Audit</li>
+        <li>Document</li>
+        <li>Produce</li>
+        <li>Publish</li>
+        <li>Monitor</li>
+      </ol>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">01</span> Identify</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Field Operations — Field Coordinator with Digital Auditors.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Business name as commonly known</li>
+                <li>Category or trade</li>
+                <li>Approximate location or cluster</li>
+                <li>Owner or manager contact where available</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>A candidate business record with a provisional business ID, added to the intake list.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Duplicate check against the master database before the business is scheduled for a visit.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">02</span> Verify</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Field Operations — Digital Auditors, supervised by the Field Coordinator.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Legal or trading name confirmation</li>
+                <li>Owner or manager confirmation of details</li>
+                <li>Category, services and products</li>
+                <li>Opening information</li>
+                <li>Location confirmation on site</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>A verified business record with verification status set and evidence noted.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Verification status field completed, recording who verified, when, and by what method.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">03</span> Consent</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Field Coordinator with the Training &amp; Community Engagement Officer.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Documented consent for data collection</li>
+                <li>Documented consent for photography</li>
+                <li>Documented consent for publication</li>
+                <li>Preferred contact channel</li>
+                <li>Any publishing restrictions requested by the business</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>A consent record linked to the business ID and filed in both physical and digital form.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Consent documented and confirmed before any photography or publication takes place.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">04</span> Audit</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Field Operations — Digital Auditors.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Existing search and map listings</li>
+                <li>Existing website or web profile</li>
+                <li>Social media presence</li>
+                <li>Accuracy of contact and location information</li>
+                <li>Quality and availability of imagery</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>A baseline digital audit scorecard recorded using qualitative levels.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Audit reviewed by the Field Coordinator for completeness and consistency of level assignment.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">05</span> Document</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Photographers with the Data / Documentation Officer.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Photographs of premises, products and services</li>
+                <li>Business description in the owner's own words</li>
+                <li>Services and product list</li>
+                <li>Brand assets where they exist</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>Raw assets filed under the business ID using the standard folder and naming structure.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Image quality, file naming and metadata checked on the same day as capture.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">06</span> Produce</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Digital Production — editing, design and copy.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Selected and edited images</li>
+                <li>Final business description</li>
+                <li>Cleaned logo or brand assets</li>
+                <li>Category and service tags</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>An approved publishing package ready for listings, directory and website use.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Internal review against the content checklist before anything is published.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">07</span> Publish</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Web / GIS / Mapping Team.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Approved publishing package</li>
+                <li>Verified business data</li>
+                <li>Verified map coordinates</li>
+                <li>Consent status confirmation</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>Live map listing, directory entry or web profile for the business.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Link testing, mobile display check and duplicate listing check immediately after publication.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">08</span> Monitor</summary>
+        <div class="op-details__body">
+          <div class="op-details__grid">
+            <div class="op-details__cell">
+              <h4>Responsible team</h4>
+              <p>Monitoring &amp; Evaluation Officer with Digital Auditors.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Required information</h4>
+              <ul>
+                <li>Published listing and profile URLs</li>
+                <li>Baseline audit record</li>
+                <li>Update and change log</li>
+              </ul>
+            </div>
+            <div class="op-details__cell">
+              <h4>Output</h4>
+              <p>A post-intervention audit and a short performance note for the business record.</p>
+            </div>
+            <div class="op-details__cell">
+              <h4>Quality-control checkpoint</h4>
+              <p>Re-audit conducted at the agreed interval using the same scorecard as the baseline.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 08 — DIGITAL AUDIT SYSTEM
+       ======================================================================== -->
+  <section class="op-section" id="audit" aria-labelledby="h-audit">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 08</p>
+      <h2 class="op-h2" id="h-audit">Digital Audit System</h2>
+      <p class="op-lead">
+        The audit uses qualitative levels rather than invented numeric scores. The same scorecard
+        is used before and after intervention so that change can be compared honestly.
+      </p>
+
+      <div class="op-scale-legend" aria-label="Audit level scale">
+        <span>Not Present</span>
+        <span>Basic</span>
+        <span>Developing</span>
+        <span>Good</span>
+        <span>Strong</span>
+      </div>
+
+      <form class="op-scorecard" id="op-scorecard" aria-label="Interactive digital audit scorecard template">
+        <fieldset class="op-score-row">
+          <legend>Google / Search visibility</legend>
+          <p class="op-score-row__desc">Whether the business can be found through search for its name, trade or location.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-search" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-search" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-search" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-search" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-search" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Maps presence</legend>
+          <p class="op-score-row__desc">Whether the business appears on maps, and whether its pin location is correct.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-maps" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-maps" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-maps" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-maps" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-maps" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Business information accuracy</legend>
+          <p class="op-score-row__desc">Correctness of name, category, services and opening information across listings.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-info" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-info" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-info" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-info" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-info" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Website</legend>
+          <p class="op-score-row__desc">Whether a website or web profile exists, loads correctly and works on mobile.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-website" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-website" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-website" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-website" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-website" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Social media</legend>
+          <p class="op-score-row__desc">Presence, activity and consistency of social profiles linked to the business.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-social" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-social" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-social" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-social" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-social" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Photography</legend>
+          <p class="op-score-row__desc">Availability, quality and usefulness of images representing the business.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-photo" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-photo" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-photo" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-photo" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-photo" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Branding</legend>
+          <p class="op-score-row__desc">Availability and consistent use of a recognisable logo or visual identity.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-brand" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-brand" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-brand" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-brand" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-brand" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Contact information</legend>
+          <p class="op-score-row__desc">Whether phone, messaging or email contact details are present and correct.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-contact" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-contact" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-contact" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-contact" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-contact" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Location information</legend>
+          <p class="op-score-row__desc">Clarity and accuracy of the physical address, landmark references and coordinates.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-location" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-location" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-location" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-location" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-location" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Customer discovery</legend>
+          <p class="op-score-row__desc">How easily a customer can find, understand and contact the business digitally.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-discovery" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-discovery" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-discovery" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-discovery" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-discovery" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="op-score-row">
+          <legend>Digital accessibility</legend>
+          <p class="op-score-row__desc">Whether published information is readable on mobile, legible, and available in the languages customers use.</p>
+          <div class="op-scale">
+            <label><input type="radio" name="audit-access" value="not-present"><span>Not Present</span></label>
+            <label><input type="radio" name="audit-access" value="basic"><span>Basic</span></label>
+            <label><input type="radio" name="audit-access" value="developing"><span>Developing</span></label>
+            <label><input type="radio" name="audit-access" value="good"><span>Good</span></label>
+            <label><input type="radio" name="audit-access" value="strong"><span>Strong</span></label>
+          </div>
+        </fieldset>
+      </form>
+
+      <p class="op-resultcount" style="margin-top:16px;">
+        <button type="button" class="op-iconbtn" id="op-score-reset">Reset scorecard</button>
+      </p>
+
+      <div class="op-beforeafter">
+        <div class="op-ba">
+          <p class="op-ba__label">Stage 1</p>
+          <h3>Before Audit</h3>
+          <p>Baseline digital presence recorded for each business using the qualitative scorecard. Establishes the starting point.</p>
+        </div>
+        <div class="op-ba">
+          <p class="op-ba__label">Stage 2</p>
+          <h3>Intervention</h3>
+          <p>Targeted improvements delivered: photography, verified information, listings, brand assets, training and publication.</p>
+        </div>
+        <div class="op-ba">
+          <p class="op-ba__label">Stage 3</p>
+          <h3>After Audit</h3>
+          <p>The same scorecard is applied again at the agreed interval to record change and identify what still needs work.</p>
+        </div>
+      </div>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>No official scoring values are defined here.</strong> The levels shown are qualitative and intended for consistent field judgement. If the main proposal defines a numeric scoring model, that model takes precedence and this template should be aligned to it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 09 — CONTENT PRODUCTION SYSTEM
+       ======================================================================== -->
+  <section class="op-section" id="content" aria-labelledby="h-content">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 09</p>
+      <h2 class="op-h2" id="h-content">Content Production System</h2>
+      <p class="op-lead">
+        The production pipeline converts a business visit into a finished set of digital assets.
+        Every output passes through the same sequence and ends in the archive.
+      </p>
+
+      <ol class="op-pipeline op-pipeline--arrow">
+        <li>Business Visit</li>
+        <li>Photography</li>
+        <li>Image Selection</li>
+        <li>Editing</li>
+        <li>Business Description</li>
+        <li>Logo / Brand Assets</li>
+        <li>Catalogue / Listing</li>
+        <li>Map / Directory</li>
+        <li>Social Content</li>
+        <li>Website</li>
+        <li>Archive</li>
+      </ol>
+
+      <div class="op-grid op-grid--4" style="margin-top:26px;">
+
+        <article class="op-card">
+          <h3>Photography</h3>
+          <p>Premises, products, services and people, captured to a consistent standard and edited for web use.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Video</h3>
+          <p>Short-form clips where the agreed scope includes them. Subject to the same consent conditions as photography.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Business Profile</h3>
+          <p>A clear, accurate description of what the business does, written in plain language and reviewed with the owner.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Product Catalogue</h3>
+          <p>Structured product or service listings with names, categories and images where available.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Social Media Content</h3>
+          <p>Reusable image and text templates the business can publish itself after training.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Map Listing</h3>
+          <p>Verified map entry with correct coordinates, category, opening information and contact details.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Website Content</h3>
+          <p>Directory or website copy formatted for mobile reading and multilingual accessibility.</p>
+        </article>
+
+        <article class="op-card">
+          <h3>Archive</h3>
+          <p>All raw and final assets filed under the business ID and retained according to the retention policy.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 10 — DATA MANAGEMENT
+       ======================================================================== -->
+  <section class="op-section" id="data" aria-labelledby="h-data">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 10</p>
+      <h2 class="op-h2" id="h-data">Data Management</h2>
+      <p class="op-lead">
+        A single master database is the source of truth. Everything published — directory, maps,
+        website, reports and analytics — is generated from it rather than maintained separately.
+      </p>
+
+      <h3 class="op-h3">Business Master Database — core fields</h3>
+      <ul class="op-fieldlist">
+        <li>Business ID</li>
+        <li>Business name</li>
+        <li>Category</li>
+        <li>Owner / contact</li>
+        <li>Location</li>
+        <li>Coordinates</li>
+        <li>Services / products</li>
+        <li>Opening information</li>
+        <li>Website</li>
+        <li>Social links</li>
+        <li>Map listing</li>
+        <li>Photos</li>
+        <li>Digital audit</li>
+        <li>Consent status</li>
+        <li>Verification status</li>
+        <li>Update date</li>
+      </ul>
+
+      <div class="op-arch">
+        <div class="op-arch__row">
+          <div class="op-arch__box op-arch__box--primary">Business Master Database</div>
+        </div>
+        <div class="op-arch__arrow" aria-hidden="true">↓</div>
+        <div class="op-arch__row">
+          <div class="op-arch__box">Directory</div>
+          <div class="op-arch__box">Maps</div>
+          <div class="op-arch__box">Website</div>
+          <div class="op-arch__box">Reports</div>
+          <div class="op-arch__box">Monitoring</div>
+          <div class="op-arch__box">Analytics</div>
+        </div>
+      </div>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>Privacy and access control.</strong> The master database contains business contact information and consent records. Access should be limited to named roles, granted on a least-privilege basis, and reviewed periodically. Personal contact details must not be published beyond what the business has explicitly consented to. Consent records must be retained and must be able to override any published content if consent is withdrawn.</p>
+      </div>
+
+      <div class="op-note op-note--info">
+        <span class="op-note__icon" aria-hidden="true">i</span>
+        <p><strong>One record per business.</strong> Duplicate records are the most common data-quality failure in programmes of this type. Run a duplicate check at intake and again before publication.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 11 — DIGITAL ASSET MANAGEMENT
+       ======================================================================== -->
+  <section class="op-section" id="assets" aria-labelledby="h-assets">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 11</p>
+      <h2 class="op-h2" id="h-assets">Digital Asset Management</h2>
+      <p class="op-lead">
+        A single folder structure keeps every asset findable. The same structure applies to the
+        working drive, the backup drive and the archive.
+      </p>
+
+      <h3 class="op-h3">Programme-level structure</h3>
+      <pre class="op-tree" aria-label="Programme folder structure"><span class="op-tree__root">HARAR-DIGITAL-VISIBILITY/</span>
+├── 01_BUSINESS_DATA/
+├── 02_FIELD_DATA/
+├── 03_PHOTOGRAPHY/
+├── 04_BRANDING/
+├── 05_SOCIAL_MEDIA/
+├── 06_WEBSITE/
+├── 07_MAP_DATA/
+├── 08_REPORTS/
+├── 09_TRAINING/
+└── 10_ARCHIVE/</pre>
+
+      <h3 class="op-h3" style="margin-top:28px;">Recommended business-level structure</h3>
+      <pre class="op-tree" aria-label="Recommended per-business folder structure"><span class="op-tree__root">03_PHOTOGRAPHY/HAR-0001_BUSINESS-NAME/</span>
+├── 01_RAW/
+├── 02_SELECTED/
+├── 03_EDITED/
+│   ├── web/
+│   ├── social/
+│   └── print/
+├── 04_LOGO_BRAND/
+├── 05_DESCRIPTION/
+└── 06_APPROVED_FOR_PUBLICATION/   <span class="op-tree__note">← only files cleared for release</span></pre>
+
+      <div class="op-note op-note--info">
+        <span class="op-note__icon" aria-hidden="true">i</span>
+        <p><strong>Naming convention.</strong> Use the business ID as the folder prefix (for example <code>HAR-0001</code>), followed by the business name in a consistent format. File names should include the business ID, content type and date so assets remain identifiable outside their folder.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 12 — QUALITY CONTROL
+       ======================================================================== -->
+  <section class="op-section" id="quality" aria-labelledby="h-quality">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 12</p>
+      <h2 class="op-h2" id="h-quality">Quality Control</h2>
+      <p class="op-lead">
+        Every business record must pass this checklist before publication. The checklist can be
+        used on screen or printed for field use.
+      </p>
+
+      <ul class="op-checklist" id="op-checklist">
+        <li><label class="op-check"><input type="checkbox"><span>Business information verified</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Location verified</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Contact information verified</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Photos approved</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Business description reviewed</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Consent documented</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Digital listing checked</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Website information checked</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Links tested</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Mobile display tested</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Duplicate records checked</span></label></li>
+        <li><label class="op-check"><input type="checkbox"><span>Final publication approved</span></label></li>
+      </ul>
+
+      <p style="margin-top:18px;">
+        <button type="button" class="op-iconbtn" id="op-checklist-reset">Clear checklist</button>
+      </p>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>Publication is blocked until every item is cleared.</strong> Any item that cannot be cleared must be recorded as an open issue and escalated to the Field Coordinator or Programme Supervisor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 13 — DAILY / WEEKLY / MONTHLY OPERATIONS
+       ======================================================================== -->
+  <section class="op-section" id="operations" aria-labelledby="h-operations">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 13</p>
+      <h2 class="op-h2" id="h-operations">Daily / Weekly / Monthly Operations</h2>
+      <p class="op-lead">
+        The operating rhythm of the programme. Daily work is field-heavy, weekly work is
+        coordination-heavy, and monthly work is reporting and improvement.
+      </p>
+
+      <div class="op-grid op-grid--3">
+
+        <div class="op-cadence">
+          <div class="op-cadence__head">
+            <span class="op-cadence__badge">Daily</span>
+            <h3>Field &amp; production cycle</h3>
+          </div>
+          <ul>
+            <li>Field visits to scheduled businesses</li>
+            <li>Data collection and verification</li>
+            <li>Photography and asset capture</li>
+            <li>Digital audits</li>
+            <li>Same-day data entry</li>
+            <li>Content production and editing</li>
+            <li>Quality checks on the day's output</li>
+          </ul>
+        </div>
+
+        <div class="op-cadence">
+          <div class="op-cadence__head">
+            <span class="op-cadence__badge">Weekly</span>
+            <h3>Coordination &amp; review</h3>
+          </div>
+          <ul>
+            <li>Team coordination meeting</li>
+            <li>Progress review against plan</li>
+            <li>Database cleanup and duplicate checks</li>
+            <li>Content publishing batch</li>
+            <li>Issue tracking and escalation</li>
+            <li>KPI update</li>
+          </ul>
+        </div>
+
+        <div class="op-cadence">
+          <div class="op-cadence__head">
+            <span class="op-cadence__badge">Monthly</span>
+            <h3>Reporting &amp; improvement</h3>
+          </div>
+          <ul>
+            <li>Programme report</li>
+            <li>KPI analysis</li>
+            <li>Business progress review</li>
+            <li>Stakeholder update</li>
+            <li>Equipment and device review</li>
+            <li>Data backup verification</li>
+            <li>Improvement planning</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 14 — INFRASTRUCTURE REQUIREMENTS
+       ======================================================================== -->
+  <section class="op-section" id="infrastructure" aria-labelledby="h-infrastructure">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 14</p>
+      <h2 class="op-h2" id="h-infrastructure">Infrastructure Requirements</h2>
+      <p class="op-lead">
+        Six physical and technical requirements must be in place before field operations begin.
+      </p>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">01</span> Office / Coordination Space</summary>
+        <div class="op-details__body">
+          <p>A base for the programme team: workstations, secure storage for equipment and physical records, a meeting area for team coordination and a private space for training or business conversations. Shared or partner-hosted space is acceptable during the pilot if it meets the storage and access requirements.</p>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">02</span> Digital Production Space</summary>
+        <div class="op-details__body">
+          <p>A quiet workspace for image editing, content preparation and publishing. Requires reliable power, a stable internet connection, adequate lighting and controlled access so that unpublished business material is not left visible or unattended.</p>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">03</span> Field Operations</summary>
+        <div class="op-details__body">
+          <p>Practical requirements for field work: transport to and between business clusters, a means of carrying and protecting equipment, weather protection, and a clear daily route plan agreed with the Field Coordinator. Field teams must carry programme identification at all times.</p>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">04</span> Connectivity</summary>
+        <div class="op-details__body">
+          <p>Reliable internet is required at the coordination base for uploads, database work and reporting. Field connectivity should be assumed to be intermittent: forms must work offline and synchronise when a connection is available. Do not design field processes that require a continuous connection.</p>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">05</span> Power</summary>
+        <div class="op-details__body">
+          <p>Power backup at the coordination and production base to prevent data loss and interrupted uploads. In the field, power banks are required for every team member, and charging routines must be part of the daily plan rather than an afterthought.</p>
+        </div>
+      </details>
+
+      <details class="op-details">
+        <summary><span class="op-details__step" aria-hidden="true">06</span> Storage</summary>
+        <div class="op-details__body">
+          <p>Two forms of storage are required: physical storage for consent forms and field documentation, and digital storage for assets and the master database. Digital storage must follow a primary-plus-backup rule — one working copy and one backup copy, with backups verified on a regular schedule.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 15 — SECURITY & DATA GOVERNANCE
+       ======================================================================== -->
+  <section class="op-section" id="security" aria-labelledby="h-security">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 15</p>
+      <h2 class="op-h2" id="h-security">Security &amp; Data Governance</h2>
+      <p class="op-lead">
+        The programme handles business contact information, consent records and unpublished
+        material. These controls are the minimum standard for handling it responsibly.
+      </p>
+
+      <div class="op-grid op-grid--2">
+        <article class="op-card">
+          <h3>Access &amp; accounts</h3>
+          <ul>
+            <li>User access permissions assigned by role, not by convenience.</li>
+            <li>Strong passwords required on all programme accounts.</li>
+            <li>Shared accounts avoided; individual accounts traceable to a person.</li>
+            <li>Access reviewed and revoked promptly when a role ends.</li>
+          </ul>
+        </article>
+
+        <article class="op-card">
+          <h3>Data handling</h3>
+          <ul>
+            <li>Controlled access to the master database.</li>
+            <li>Consent records maintained and linked to each business ID.</li>
+            <li>Data verification before publication.</li>
+            <li>Secure file storage for unpublished material.</li>
+          </ul>
+        </article>
+
+        <article class="op-card">
+          <h3>Continuity</h3>
+          <ul>
+            <li>Regular backups on a defined schedule.</li>
+            <li>Backups stored separately from working files.</li>
+            <li>Backup integrity checked, not assumed.</li>
+            <li>Version control on key documents and datasets.</li>
+          </ul>
+        </article>
+
+        <article class="op-card">
+          <h3>Devices &amp; retention</h3>
+          <ul>
+            <li>Device protection: screen locks, encryption where available.</li>
+            <li>Devices not left unattended with unpublished material accessible.</li>
+            <li>Archive policy defining what is retained, for how long, and what is deleted.</li>
+            <li>Withdrawal of consent must be actionable — published content removed or amended.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 16 — OPERATIONAL KPI DASHBOARD
+       ======================================================================== -->
+  <section class="op-section" id="kpis" aria-labelledby="h-kpis">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 16</p>
+      <h2 class="op-h2" id="h-kpis">Operational KPI Dashboard</h2>
+      <p class="op-lead">
+        The ten operational indicators tracked by the programme. All values currently display as
+        <strong>00</strong> because no live programme data exists yet — these are placeholders,
+        not results.
+      </p>
+
+      <div class="op-grid op-grid--4">
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Businesses Registered</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Businesses Verified</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Digital Audits Completed</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Businesses Improved</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Photos Produced</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Digital Listings Updated</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Web Profiles Created</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Training Participants</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Content Published</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+        <div class="op-kpi">
+          <span class="op-kpi__value" data-count="0">00</span>
+          <span class="op-kpi__label">Issues Resolved</span>
+          <span class="op-kpi__note">Placeholder</span>
+        </div>
+      </div>
+
+      <div class="op-note op-note--info">
+        <span class="op-note__icon" aria-hidden="true">i</span>
+        <p><strong>Live values are populated from the programme database.</strong> When real figures are available, update the <code>data-count</code> attribute on each KPI value. The counters animate to the supplied number and zero-pad to two digits.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 17 — 12-MONTH OPERATIONAL PHASING
+       ======================================================================== -->
+  <section class="op-section" id="phasing" aria-labelledby="h-phasing">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 17</p>
+      <h2 class="op-h2" id="h-phasing">Operational Phasing</h2>
+      <p class="op-lead">
+        Eight operational phases, from mobilisation to scale-up. The phase structure below should
+        be aligned with the official Implementation Roadmap in the main proposal.
+      </p>
+
+      <ol class="op-timeline">
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">01</span>
+          <div class="op-timeline__body">
+            <h3>Setup &amp; Mobilisation</h3>
+            <p>Confirm scope and governance, establish the coordination base, agree data and consent rules, and prepare procurement.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">02</span>
+          <div class="op-timeline__body">
+            <h3>Team Training</h3>
+            <p>Train the field team on verification, consent, audit scoring, photography standards and data entry. Run a small supervised test visit.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">03</span>
+          <div class="op-timeline__body">
+            <h3>Business Mapping</h3>
+            <p>Identify and verify businesses in the target cluster. Build the initial master database and confirm location data.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">04</span>
+          <div class="op-timeline__body">
+            <h3>Digital Audits</h3>
+            <p>Complete baseline digital audits for all participating businesses using the standard scorecard.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">05</span>
+          <div class="op-timeline__body">
+            <h3>Content Production</h3>
+            <p>Photograph businesses, prepare descriptions, clean brand assets and build the publishing packages.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">06</span>
+          <div class="op-timeline__body">
+            <h3>Digital Implementation</h3>
+            <p>Publish listings, map entries, directory profiles and website content. Deliver owner and staff training.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">07</span>
+          <div class="op-timeline__body">
+            <h3>Monitoring &amp; Optimisation</h3>
+            <p>Re-audit participating businesses, track KPIs, fix data and content gaps and correct issues found in the field.</p>
+          </div>
+        </li>
+        <li>
+          <span class="op-timeline__dot" aria-hidden="true">08</span>
+          <div class="op-timeline__body">
+            <h3>Evaluation &amp; Scale-up</h3>
+            <p>Evaluate outputs and outcomes, document lessons, finalise the scale toolkit and present the case for expansion.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>Align with the official roadmap.</strong> Phase names, durations and sequencing must match the approved Implementation Roadmap in the main proposal. If they differ, the proposal's structure takes precedence and this page should be updated.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 18 — SCALING MODEL
+       ======================================================================== -->
+  <section class="op-section" id="scaling" aria-labelledby="h-scaling">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 18</p>
+      <h2 class="op-h2" id="h-scaling">Scaling Model</h2>
+      <p class="op-lead">
+        The programme is designed to start small, prove the operating model, and expand only when
+        the evidence supports it.
+      </p>
+
+      <div class="op-scale-stack">
+        <div class="op-scale-step">
+          <h3>Pilot</h3>
+          <p>One district or cluster, approximately 50–100 businesses. The purpose is to test the operating model, not to maximise coverage.</p>
+        </div>
+        <div class="op-scale-stack__arrow" aria-hidden="true">↓</div>
+        <div class="op-scale-step">
+          <h3>Evaluate</h3>
+          <p>Measure outputs and outcomes against the KPI framework. Identify what worked, what did not, and what the evidence actually supports.</p>
+        </div>
+        <div class="op-scale-stack__arrow" aria-hidden="true">↓</div>
+        <div class="op-scale-step">
+          <h3>Improve</h3>
+          <p>Fix operational gaps in workflow, team structure, tooling, data quality and training before expanding.</p>
+        </div>
+        <div class="op-scale-stack__arrow" aria-hidden="true">↓</div>
+        <div class="op-scale-step">
+          <h3>Expand</h3>
+          <p>Extend to additional districts or clusters using the refined model, scaling team size and production capacity accordingly.</p>
+        </div>
+        <div class="op-scale-stack__arrow" aria-hidden="true">↓</div>
+        <div class="op-scale-step op-scale-step--accent">
+          <h3>Citywide System</h3>
+          <p>A sustainable digital visibility infrastructure for Harar, maintained beyond the programme period by the responsible institutions.</p>
+        </div>
+      </div>
+
+      <div class="op-note">
+        <span class="op-note__icon" aria-hidden="true">!</span>
+        <p><strong>The pilot scale is a planning framework, not a guaranteed target.</strong> The number of businesses in the pilot must be confirmed against the approved scope, available budget and field capacity. Progression to each subsequent stage is a governance decision based on evidence.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 19 — RESPONSIBILITY MATRIX
+       ======================================================================== -->
+  <section class="op-section" id="responsibility" aria-labelledby="h-responsibility">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 19</p>
+      <h2 class="op-h2" id="h-responsibility">Responsibility Matrix</h2>
+      <p class="op-lead">
+        Who leads, who supports and who is not involved for each core activity. This matrix
+        should be adapted to the governance structure approved in the main proposal.
+      </p>
+
+      <p class="op-resultcount">
+        <span class="op-mark op-mark--lead">Lead</span>&nbsp; primary accountability &nbsp;&bull;&nbsp;
+        <span class="op-mark op-mark--support">Support</span>&nbsp; contributes &nbsp;&bull;&nbsp;
+        <span class="op-mark op-mark--none">—</span>&nbsp; not involved
+      </p>
+
+      <div class="op-tablewrap op-tablewrap--scroll" tabindex="0" role="region"
+           aria-label="Responsibility matrix, scroll horizontally to view all columns">
+        <table class="op-table op-matrix">
+          <caption>Activity responsibility by team</caption>
+          <thead>
+            <tr>
+              <th scope="col">Activity</th>
+              <th scope="col">Programme</th>
+              <th scope="col">Field Team</th>
+              <th scope="col">Digital Team</th>
+              <th scope="col">City Stakeholder</th>
+              <th scope="col">Business</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Business identification</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--none">—</span></td>
+            </tr>
+            <tr>
+              <td>Verification</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--lead">Lead</span></td>
+            </tr>
+            <tr>
+              <td>Consent &amp; authorisation</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--lead">Lead</span></td>
+            </tr>
+            <tr>
+              <td>Photography</td>
+              <td data-label="Programme"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--support">Support</span></td>
+            </tr>
+            <tr>
+              <td>Digital audit — baseline</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--none">—</span></td>
+            </tr>
+            <tr>
+              <td>Digital audit — post-intervention</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--none">—</span></td>
+            </tr>
+            <tr>
+              <td>Website / listing creation</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--support">Support</span></td>
+            </tr>
+            <tr>
+              <td>Content production</td>
+              <td data-label="Programme"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--support">Support</span></td>
+            </tr>
+            <tr>
+              <td>Training &amp; coaching</td>
+              <td data-label="Programme"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--lead">Lead</span></td>
+            </tr>
+            <tr>
+              <td>Data management &amp; backups</td>
+              <td data-label="Programme"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--none">—</span></td>
+            </tr>
+            <tr>
+              <td>Monitoring &amp; reporting</td>
+              <td data-label="Programme"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--none">—</span></td>
+            </tr>
+            <tr>
+              <td>Quality control &amp; publication approval</td>
+              <td data-label="Programme"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--support">Support</span></td>
+            </tr>
+            <tr>
+              <td>Sustainability &amp; handover</td>
+              <td data-label="Programme"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Field Team"><span class="op-mark op-mark--none">—</span></td>
+              <td data-label="Digital Team"><span class="op-mark op-mark--support">Support</span></td>
+              <td data-label="City Stakeholder"><span class="op-mark op-mark--lead">Lead</span></td>
+              <td data-label="Business"><span class="op-mark op-mark--support">Support</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 20 — OPERATIONAL PRINCIPLES
+       ======================================================================== -->
+  <section class="op-section" id="principles" aria-labelledby="h-principles">
+    <div class="op-container">
+      <p class="op-eyebrow">Section 20</p>
+      <h2 class="op-h2" id="h-principles">Operational Principles</h2>
+      <p class="op-lead">
+        Six principles govern how the programme operates in the field and how decisions are made
+        when the handbook does not cover a specific situation.
+      </p>
+
+      <div class="op-grid op-grid--3">
+        <article class="op-principle">
+          <h3>Accuracy</h3>
+          <p>Use verified information. If a detail cannot be confirmed with the business, it does not get published.</p>
+        </article>
+        <article class="op-principle">
+          <h3>Consistency</h3>
+          <p>Use standardised processes, forms and scorecards so that results are comparable across businesses and teams.</p>
+        </article>
+        <article class="op-principle">
+          <h3>Accessibility</h3>
+          <p>Design for mobile and multilingual users. Published information must be readable on the devices customers actually use.</p>
+        </article>
+        <article class="op-principle">
+          <h3>Privacy</h3>
+          <p>Respect consent and data protection. Consent is a condition of participation, not a formality.</p>
+        </article>
+        <article class="op-principle">
+          <h3>Sustainability</h3>
+          <p>Build systems that can continue beyond the pilot, with skills transferred to businesses and institutions.</p>
+        </article>
+        <article class="op-principle">
+          <h3>Scalability</h3>
+          <p>Design processes that can expand citywide without being rebuilt from scratch at each new district.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 21 — CALL TO ACTION
+       ======================================================================== -->
+  <section class="op-section" id="cta" aria-labelledby="h-cta">
+    <div class="op-container">
+      <div class="op-cta">
+        <h2 id="h-cta">Ready to move from plan to implementation?</h2>
+        <p>
+          This operational setup is a planning document. Implementation begins with an approved
+          scope, a confirmed pilot area, a named team and the governance decisions that authorise
+          field activity.
+        </p>
+        <div class="op-cta__actions">
+          <a class="op-btn op-btn--primary" href="index.html">View the Main Initiative</a>
+          <a class="op-btn op-btn--ghost" href="#" data-placeholder="true" aria-disabled="true">View Implementation Plan</a>
+          <a class="op-btn op-btn--ghost" href="#" data-placeholder="true" aria-disabled="true">View Monitoring Framework</a>
+        </div>
+        <p class="op-cta__note">
+          Placeholder links are shown where a published page does not yet exist.
+          Replace them with the final URLs before launch.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==========================================================================
+     FOOTER
+     ========================================================================== -->
+<footer class="op-footer">
+  <div class="op-container">
+    <div class="op-footer__grid">
+
+      <div>
+        <div class="op-footer__brand">
+          <span class="op-brand__mark" aria-hidden="true">HC</span>
+          <strong>Harar City Digital Visibility Initiative</strong>
+        </div>
+        <p style="max-width:46ch; margin:0;">
+          A programme to strengthen the digital visibility of businesses in Harar and to build
+          a governed city-level digital discovery layer.
+        </p>
+      </div>
+
+      <div>
+        <h3>Programme</h3>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="index.html">Proposal</a></li>
+          <li><a href="operational-setup.html">Operational Setup</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>On this page</h3>
+        <ul>
+          <li><a href="#equipment">Equipment Matrix</a></li>
+          <li><a href="#workflow">Field Workflow</a></li>
+          <li><a href="#quality">Quality Control</a></li>
+          <li><a href="#kpis">KPI Dashboard</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="op-footer__legal">
+      <p>
+        Planning document. Figures, quantities and team sizes shown are placeholders or planning
+        guides and must be confirmed against the approved programme scope. This page is not an
+        official publication of the Harar City Administration unless formally adopted.
+      </p>
+      <p>Operational Setup &bull; Version 1.0</p>
+    </div>
+  </div>
+</footer>
+
+<button type="button" class="op-top" id="op-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+<script>
+/* ============================================================================
+   OPERATIONAL SETUP — LIGHTWEIGHT, DEPENDENCY-FREE JAVASCRIPT
+   ============================================================================ */
+(function () {
+  'use strict';
+
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --------------------------------------------------------------------------
+     1. MOBILE NAVIGATION
+     -------------------------------------------------------------------------- */
+  var burger = document.getElementById('op-burger');
+  var nav = document.getElementById('op-nav');
+
+  function closeNav() {
+    if (!nav || !burger) return;
+    nav.setAttribute('data-open', 'false');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open navigation menu');
+  }
+
+  if (burger && nav) {
+    burger.addEventListener('click', function () {
+      var isOpen = burger.getAttribute('aria-expanded') === 'true';
+      if (isOpen) {
+        closeNav();
+      } else {
+        nav.setAttribute('data-open', 'true');
+        burger.setAttribute('aria-expanded', 'true');
+        burger.setAttribute('aria-label', 'Close navigation menu');
+      }
+    });
+
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) closeNav();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeNav();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!nav.contains(e.target) && !burger.contains(e.target)) closeNav();
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 860) closeNav();
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     2. SECTION NAVIGATION — SCROLLSPY
+     -------------------------------------------------------------------------- */
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.op-chip'));
+  var sections = chips
+    .map(function (chip) {
+      var id = chip.getAttribute('href');
+      return id && id.charAt(0) === '#' ? document.querySelector(id) : null;
+    })
+    .filter(Boolean);
+
+  function setActiveChip(id) {
+    chips.forEach(function (chip) {
+      var isActive = chip.getAttribute('href') === '#' + id;
+      chip.classList.toggle('is-active', isActive);
+      if (isActive) {
+        chip.setAttribute('aria-current', 'true');
+        // Keep the active chip visible within the horizontally scrolling bar.
+        var bar = document.getElementById('op-chips');
+        if (bar && bar.scrollWidth > bar.clientWidth) {
+          var left = chip.offsetLeft - (bar.clientWidth / 2) + (chip.offsetWidth / 2);
+          bar.scrollTo({ left: Math.max(0, left), behavior: reduceMotion ? 'auto' : 'smooth' });
+        }
+      } else {
+        chip.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  if (sections.length && 'IntersectionObserver' in window) {
+    var visible = new Map();
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          visible.set(entry.target.id, entry.boundingClientRect.top);
+        } else {
+          visible.delete(entry.target.id);
+        }
+      });
+
+      if (!visible.size) return;
+
+      // Choose the section closest to the top of the viewport.
+      var topId = null;
+      var topValue = Infinity;
+      visible.forEach(function (value, key) {
+        if (value < topValue) { topValue = value; topId = key; }
+      });
+      if (topId) setActiveChip(topId);
+    }, {
+      rootMargin: '-140px 0px -60% 0px',
+      threshold: 0
+    });
+
+    sections.forEach(function (section) { observer.observe(section); });
+  }
+
+  /* --------------------------------------------------------------------------
+     3. EXPAND / COLLAPSE ALL DETAILS
+     -------------------------------------------------------------------------- */
+  var toggleAll = document.getElementById('op-toggleall');
+  var allDetails = Array.prototype.slice.call(document.querySelectorAll('details.op-details'));
+
+  function syncToggleAllLabel() {
+    if (!toggleAll) return;
+    var allOpen = allDetails.length > 0 && allDetails.every(function (d) { return d.open; });
+    toggleAll.setAttribute('aria-expanded', allOpen ? 'true' : 'false');
+    var label = toggleAll.querySelector('span');
+    if (label) label.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  }
+
+  if (toggleAll && allDetails.length) {
+    toggleAll.addEventListener('click', function () {
+      var allOpen = allDetails.every(function (d) { return d.open; });
+      allDetails.forEach(function (d) { d.open = !allOpen; });
+      syncToggleAllLabel();
+    });
+
+    allDetails.forEach(function (d) {
+      d.addEventListener('toggle', syncToggleAllLabel);
+    });
+
+    syncToggleAllLabel();
+  } else if (toggleAll) {
+    toggleAll.hidden = true;
+  }
+
+  /* --------------------------------------------------------------------------
+     4. EQUIPMENT CATEGORY FILTERS + SEARCH
+     -------------------------------------------------------------------------- */
+  var equipTable = document.getElementById('equip-table');
+  var equipSearch = document.getElementById('equip-search');
+  var equipCount = document.getElementById('equip-count');
+  var equipEmpty = document.getElementById('equip-empty');
+  var equipRows = equipTable
+    ? Array.prototype.slice.call(equipTable.querySelectorAll('tbody tr'))
+    : [];
+
+  var equipState = { category: 'all', query: '' };
+
+  function applyEquipFilters() {
+    if (!equipRows.length) return;
+
+    var query = equipState.query.trim().toLowerCase();
+    var shown = 0;
+
+    equipRows.forEach(function (row) {
+      var matchesCategory =
+        equipState.category === 'all' || row.getAttribute('data-cat') === equipState.category;
+      var matchesQuery = !query || row.textContent.toLowerCase().indexOf(query) !== -1;
+      var visible = matchesCategory && matchesQuery;
+
+      row.hidden = !visible;
+      if (visible) shown++;
+    });
+
+    if (equipCount) {
+      if (!query && equipState.category === 'all') {
+        equipCount.textContent = 'Showing all ' + equipRows.length + ' items.';
+      } else {
+        equipCount.textContent = 'Showing ' + shown + ' of ' + equipRows.length + ' items.';
+      }
+    }
+
+    if (equipEmpty) equipEmpty.hidden = shown !== 0;
+  }
+
+  document.querySelectorAll('[data-equip-filter]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      equipState.category = btn.getAttribute('data-equip-filter');
+      document.querySelectorAll('[data-equip-filter]').forEach(function (other) {
+        other.setAttribute('aria-pressed', other === btn ? 'true' : 'false');
+      });
+      applyEquipFilters();
+    });
+  });
+
+  if (equipSearch) {
+    equipSearch.addEventListener('input', function () {
+      equipState.query = equipSearch.value;
+      applyEquipFilters();
+    });
+  }
+
+  applyEquipFilters();
+
+  /* --------------------------------------------------------------------------
+     5. SOFTWARE / TOOL FILTERS + SEARCH
+     -------------------------------------------------------------------------- */
+  var toolSearch = document.getElementById('tool-search');
+  var toolCards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
+  var toolCount = document.getElementById('tool-count');
+  var toolEmpty = document.getElementById('tool-empty');
+
+  var toolState = { type: 'all', query: '' };
+
+  function applyToolFilters() {
+    if (!toolCards.length) return;
+
+    var query = toolState.query.trim().toLowerCase();
+    var shown = 0;
+
+    toolCards.forEach(function (card) {
+      var matchesType = true;
+
+      if (toolState.type !== 'all') {
+        var tags = Array.prototype.slice.call(card.querySelectorAll('.op-tag'));
+        matchesType = tags.some(function (tag) {
+          var text = tag.textContent.toLowerCase();
+          return toolState.type === 'recommended'
+            ? text.indexOf('recommended') !== -1
+            : text.indexOf('alternative') !== -1;
+        });
+      }
+
+      var haystack = (card.textContent + ' ' + (card.getAttribute('data-function') || '')).toLowerCase();
+      var matchesQuery = !query || haystack.indexOf(query) !== -1;
+      var visible = matchesType && matchesQuery;
+
+      card.hidden = !visible;
+      if (visible) shown++;
+    });
+
+    if (toolCount) {
+      if (!query && toolState.type === 'all') {
+        toolCount.textContent = 'Showing all ' + toolCards.length + ' tool groups.';
+      } else {
+        toolCount.textContent = 'Showing ' + shown + ' of ' + toolCards.length + ' tool groups.';
+      }
+    }
+
+    if (toolEmpty) toolEmpty.hidden = shown !== 0;
+  }
+
+  document.querySelectorAll('[data-tool-filter]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      toolState.type = btn.getAttribute('data-tool-filter');
+      document.querySelectorAll('[data-tool-filter]').forEach(function (other) {
+        other.setAttribute('aria-pressed', other === btn ? 'true' : 'false');
+      });
+      applyToolFilters();
+    });
+  });
+
+  if (toolSearch) {
+    toolSearch.addEventListener('input', function () {
+      toolState.query = toolSearch.value;
+      applyToolFilters();
+    });
+  }
+
+  applyToolFilters();
+
+  /* --------------------------------------------------------------------------
+     6. KPI COUNTERS (PLACEHOLDER VALUES)
+     -------------------------------------------------------------------------- */
+  function renderCounter(el, value) {
+    el.textContent = String(value).padStart(2, '0');
+  }
+
+  var counters = Array.prototype.slice.call(document.querySelectorAll('.op-kpi__value[data-count]'));
+
+  function animateCounter(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (isNaN(target)) target = 0;
+
+    if (reduceMotion || target === 0) {
+      renderCounter(el, target);
+      return;
+    }
+
+    var duration = 900;
+    var start = null;
+
+    function step(timestamp) {
+      if (start === null) start = timestamp;
+      var progress = Math.min((timestamp - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      renderCounter(el, Math.round(target * eased));
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  if (counters.length && 'IntersectionObserver' in window) {
+    var counterObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    counters.forEach(function (el) {
+      renderCounter(el, 0);
+      counterObserver.observe(el);
+    });
+  } else {
+    counters.forEach(function (el) { animateCounter(el); });
+  }
+
+  /* --------------------------------------------------------------------------
+     7. SCORECARD + CHECKLIST RESET
+     -------------------------------------------------------------------------- */
+  var scorecard = document.getElementById('op-scorecard');
+  var scoreReset = document.getElementById('op-score-reset');
+  if (scorecard && scoreReset) {
+    scoreReset.addEventListener('click', function () {
+      scorecard.reset();
+    });
+  }
+
+  var checklist = document.getElementById('op-checklist');
+  var checklistReset = document.getElementById('op-checklist-reset');
+  if (checklist && checklistReset) {
+    checklistReset.addEventListener('click', function () {
+      checklist.querySelectorAll('input[type="checkbox"]').forEach(function (box) {
+        box.checked = false;
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     8. BACK TO TOP
+     -------------------------------------------------------------------------- */
+  var topBtn = document.getElementById('op-top');
+
+  function syncTopButton() {
+    if (!topBtn) return;
+    topBtn.classList.toggle('is-visible', window.scrollY > 600);
+  }
+
+  if (topBtn) {
+    topBtn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      var main = document.getElementById('main');
+      if (main) {
+        main.setAttribute('tabindex', '-1');
+        main.focus({ preventScroll: true });
+      }
+    });
+
+    window.addEventListener('scroll', syncTopButton, { passive: true });
+    syncTopButton();
+  }
+
+  /* --------------------------------------------------------------------------
+     9. PRINT
+     -------------------------------------------------------------------------- */
+  var printBtn = document.getElementById('op-print');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      // Ensure all disclosure content is visible in the printed document.
+      allDetails.forEach(function (d) { d.open = true; });
+      window.print();
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     10. PLACEHOLDER LINK GUARD
+     -------------------------------------------------------------------------- */
+  document.querySelectorAll('[data-placeholder="true"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.alert('This page has not been published yet. The link will be activated once the page is available.');
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
